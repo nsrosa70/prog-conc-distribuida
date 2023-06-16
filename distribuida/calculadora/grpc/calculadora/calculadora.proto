@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package calculadora;
+
+service Calculadora {
+  rpc Add (Request) returns (Reply) {}
+  rpc Sub (Request) returns (Reply) {}
+  rpc Div (Request) returns (Reply) {}
+  rpc Mul (Request) returns (Reply) {}
+}
+
+// Mensagem de Request
+message Request {
+  string Op = 1;
+  int32 P1 = 2;
+  int32 P2 = 3;
+}
+
+//Mensagem de resposta
+message Reply {
+  int32 N = 1;
+}
+
