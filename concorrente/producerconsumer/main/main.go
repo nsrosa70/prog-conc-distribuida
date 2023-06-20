@@ -9,27 +9,6 @@ import (
 	"time"
 )
 
-func producer(id int, wg *sync.WaitGroup) {
-	defer wg.Done()
-
-	// generate an event
-	e := event.Event{E: "event" + strconv.Itoa(id)}
-
-	// publish event
-	EB.Add(e)
-}
-
-func consumer(id int, wg *sync.WaitGroup) {
-	defer wg.Done()
-
-	// consume event
-	e := EB.Get()
-	e.E = strconv.Itoa(id) + ":" + e.E
-
-	// process event
-	e.Process(e)
-}
-
 //var EB *mutex.MutexEventBuffer
 //var EB *cond.CondEventBuffer
 //var EB *channel.ChanEventBuffer
@@ -43,9 +22,9 @@ func main() {
 	sample := 10000 // sample size
 
 	//EB = mutex.NewMutexEventBuffer(1)
-	//EB  = cond.NewCondEventBuffer(1)
-	//EB  = channel.NewChanEventBuffer(1)
-	//EB  = semaforo.NewSemaforoEventBuffer(1)
+	//EB = cond.NewCondEventBuffer(1)
+	//EB = channel.NewChanEventBuffer(1)
+	//EB = semaforo.NewSemaforoEventBuffer(1)
 	EB = monitor.NewMonitorEventBuffer(1)
 
 	t1 := time.Now()
@@ -66,4 +45,25 @@ func main() {
 	t2 := time.Now().Sub(t1).Milliseconds()
 
 	fmt.Println(float64(t2) / float64(sample))
+}
+
+func producer(id int, wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	// generate an event
+	e := event.Event{E: "event" + strconv.Itoa(id)}
+
+	// publish event
+	EB.Add(e)
+}
+
+func consumer(id int, wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	// consume event
+	e := EB.Get()
+	e.E = strconv.Itoa(id) + ":" + e.E
+
+	// process event
+	e.Process(e)
 }
