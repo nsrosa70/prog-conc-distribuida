@@ -1,9 +1,8 @@
 package main
 
-import "C"
 import (
-	"concorrente/producerconsumer/event"
-	monitor "concorrente/producerconsumer/monitor/impl"
+	"aulas/concorrente/producerconsumer/event"
+	monitor "aulas/concorrente/producerconsumer/monitor/impl"
 	"fmt"
 	"strconv"
 	"sync"
@@ -40,8 +39,8 @@ var EB *monitor.MonitorEventBuffer
 func main() {
 	wg := sync.WaitGroup{}
 
-	n := 100    // number of producers/consumers
-	sample := 10000  // sample size
+	n := 100        // number of producers/consumers
+	sample := 10000 // sample size
 
 	//EB = mutex.NewMutexEventBuffer(1)
 	//EB  = cond.NewCondEventBuffer(1)

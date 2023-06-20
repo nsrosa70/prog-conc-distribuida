@@ -1,22 +1,21 @@
 package cond
 
-import "C"
 import (
-	"multithread/producerconsumer/event"
+	"aulas/concorrente/producerconsumer/event"
 	"sync"
 )
 
 type CondEventBuffer struct {
 	cond     *sync.Cond
 	capacity int
-	buffer    []event.Event
+	buffer   []event.Event
 }
 
 func NewCondEventBuffer(capacity int) *CondEventBuffer {
 	return &CondEventBuffer{
 		cond:     sync.NewCond(&sync.Mutex{}),
 		capacity: capacity,
-		buffer:    []event.Event{},
+		buffer:   []event.Event{},
 	}
 }
 
@@ -42,4 +41,3 @@ func (eb *CondEventBuffer) Get() event.Event {
 
 	return e
 }
-

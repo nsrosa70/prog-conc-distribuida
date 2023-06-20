@@ -22,8 +22,8 @@ func main() {
 	wg.Add(1000)
 
 	for i := 0; i < 1000; i++ {
-		//go addAtomic(wg, &n) // atomic
-		go add(wg, &n)
+		go addAtomic(wg, &n) // atomic
+		//go add(wg, &n)
 	}
 	wg.Wait()
 

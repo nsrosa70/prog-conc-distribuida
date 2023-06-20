@@ -1,8 +1,7 @@
 package channel
 
-import "C"
 import (
-	"concorrente/producerconsumer/event"
+	"aulas/concorrente/producerconsumer/event"
 )
 
 type ChanEventBuffer struct {
@@ -22,25 +21,24 @@ func NewChanEventBuffer(capacity int) *ChanEventBuffer {
 func (eb *ChanEventBuffer) Add(e event.Event) {
 	eb.ch <- true
 	for len(eb.buffer) == eb.capacity {
-		<- eb.ch
+		<-eb.ch
 		//runtime.Gosched()
 		eb.ch <- true
 	}
 	eb.buffer = append(eb.buffer, e)
-	<- eb.ch
+	<-eb.ch
 }
 
 func (eb *ChanEventBuffer) Get() event.Event {
 	eb.ch <- true
 	for len(eb.buffer) == 0 {
-		<- eb.ch
+		<-eb.ch
 		//runtime.Gosched()
 		eb.ch <- true
 	}
 	e := eb.buffer[0]
 	eb.buffer = eb.buffer[1:]
-	<- eb.ch
+	<-eb.ch
 
 	return e
 }
-

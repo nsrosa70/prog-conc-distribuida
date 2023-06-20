@@ -1,8 +1,0 @@
-source ~/.cshrc
-export GO111MODULE=off
-export GOPATH=$GOPATH:/Volumes/GoogleDrive/Meu\ Drive/go/pcd
-cd /Volumes/GoogleDrive/Meu\ Drive/go/pcd/src/concorrente/producerconsumer/main
-
-go build main.go
-
-./main

@@ -1,7 +1,7 @@
 package mutex
 
 import (
-	"concorrente/producerconsumer/event"
+	"aulas/concorrente/producerconsumer/event"
 	"runtime"
 	"sync"
 )
@@ -44,4 +44,3 @@ func (s *MutexEventBuffer) Get() event.Event {
 
 	return ret
 }
-

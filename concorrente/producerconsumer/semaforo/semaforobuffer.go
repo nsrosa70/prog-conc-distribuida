@@ -1,7 +1,7 @@
 package semaforo
 
 import (
-	"concorrente/producerconsumer/event"
+	"aulas/concorrente/producerconsumer/event"
 	"runtime"
 )
 
@@ -43,4 +43,3 @@ func (s *SemaforoEventBuffer) Get() event.Event {
 
 	return ret
 }
-

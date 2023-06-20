@@ -1,7 +1,7 @@
 package monitor
 
 import (
-	"concorrente/producerconsumer/event"
+	"aulas/concorrente/producerconsumer/event"
 	"runtime"
 	"sync"
 )
@@ -58,4 +58,3 @@ func (b *MonitorEventBuffer) Get() event.Event {
 
 	return e
 }
-
