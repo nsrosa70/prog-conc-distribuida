@@ -43,3 +43,7 @@ func (s *SemaforoEventBuffer) Get() event.Event {
 
 	return ret
 }
+
+func (s *SemaforoEventBuffer) BufferSize() int {
+	return len(s.buffer)
+}

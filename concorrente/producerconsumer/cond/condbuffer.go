@@ -41,3 +41,7 @@ func (eb *CondEventBuffer) Get() event.Event {
 
 	return e
 }
+
+func (s *CondEventBuffer) BufferSize() int {
+	return len(s.buffer)
+}

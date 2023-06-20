@@ -1,4 +1,4 @@
-package mutex
+package mx
 
 import (
 	"aulas/concorrente/producerconsumer/event"
@@ -18,6 +18,10 @@ func NewMutexEventBuffer(capacity int) *MutexEventBuffer {
 		capacity: capacity,
 		buffer:   []event.Event{},
 	}
+}
+
+func (s *MutexEventBuffer) BufferSize() int {
+	return len(s.buffer)
 }
 
 func (s *MutexEventBuffer) Add(e event.Event) {

@@ -1,69 +1,89 @@
 package main
 
 import (
+	"aulas/concorrente/producerconsumer/channel"
 	"aulas/concorrente/producerconsumer/event"
-	monitor "aulas/concorrente/producerconsumer/monitor/impl"
 	"fmt"
 	"strconv"
 	"sync"
 	"time"
 )
 
-//var EB *mutex.MutexEventBuffer
+const NumeroDeProdutores = 1
+const NumeroDeConsumidores = 5
+const TamanhoDaAmostra = 1
+const CapacidadeDoBuffer = 1 // 1, 100, 1.000
+const NumeroDeItens = 10000
+
+//var EB *mx.MutexEventBuffer
+
 //var EB *cond.CondEventBuffer
-//var EB *channel.ChanEventBuffer
+
+var EB *channel.ChanEventBuffer
+
 //var EB *semaforo.SemaforoEventBuffer
-var EB *monitor.MonitorEventBuffer
+
+//var EB *monitor.MonitorEventBuffer
+
+//var EB = *new(interface{})
 
 func main() {
-	wg := sync.WaitGroup{}
+	wgC := sync.WaitGroup{}
+	wgP := sync.WaitGroup{}
+	done := make(chan bool)
 
-	n := 100        // number of producers/consumers
-	sample := 10000 // sample size
+	//EB = primitive("Mutex")
+	//EB = mx.NewMutexEventBuffer(CapacidadeDoBuffer)
+	//EB = cond.NewCondEventBuffer(CapacidadeDoBuffer)
+	//EB = channel.NewChanEventBuffer(CapacidadeDoBuffer)
+	//EB = semaforo.NewSemaforoEventBuffer(CapacidadeDoBuffer)
+	//EB = monitor.NewMonitorEventBuffer(CapacidadeDoBuffer)
 
-	//EB = mutex.NewMutexEventBuffer(1)
-	//EB = cond.NewCondEventBuffer(1)
-	//EB = channel.NewChanEventBuffer(1)
-	//EB = semaforo.NewSemaforoEventBuffer(1)
-	EB = monitor.NewMonitorEventBuffer(1)
-
-	t1 := time.Now()
-	for idx := 0; idx < sample; idx++ {
-		for i := 0; i < n; i++ {
-			wg.Add(1)
-			go consumer(i, &wg)
+	for idx := 0; idx < TamanhoDaAmostra; idx++ {
+		t1 := time.Now()
+		for i := 0; i < NumeroDeConsumidores; i++ { // inicia os consumidores
+			wgC.Add(1)
+			go consumidor(i, &wgC, done)
 		}
 
-		//time.Sleep(10 * time.Second)
-
-		for i := 0; i < n; i++ {
-			wg.Add(1)
-			go producer(i, &wg)
+		for i := 0; i < NumeroDeProdutores; i++ { // inicia os produtores
+			wgP.Add(1)
+			go produtor(i, &wgP)
 		}
-		wg.Wait()
+		wgP.Wait() // espera os produtores concluirem
+
+		go func() { // checa quando o buffer esvazia
+			for EB.BufferSize() != 0 {
+			}
+			done <- true // produtores concluiram e a fila esvaziou
+		}()
+		wgC.Wait() // espera os consumidores concluirem
+		t2 := time.Now().Sub(t1).Milliseconds()
+		fmt.Println(t2)
 	}
-	t2 := time.Now().Sub(t1).Milliseconds()
-
-	fmt.Println(float64(t2) / float64(sample))
 }
 
-func producer(id int, wg *sync.WaitGroup) {
+func produtor(id int, wg *sync.WaitGroup) {
 	defer wg.Done()
 
-	// generate an event
-	e := event.Event{E: "event" + strconv.Itoa(id)}
-
-	// publish event
-	EB.Add(e)
+	for i := 0; i < NumeroDeItens; i++ {
+		e := event.Event{E: "event [" + strconv.Itoa(id) + "," + strconv.Itoa(i) + "]"} // gera um evento
+		EB.Add(e)                                                                       // publica o evento
+	}
 }
 
-func consumer(id int, wg *sync.WaitGroup) {
+func consumidor(id int, wg *sync.WaitGroup, done chan bool) {
 	defer wg.Done()
 
-	// consume event
-	e := EB.Get()
-	e.E = strconv.Itoa(id) + ":" + e.E
+	go func() { // usado para encerrar o consumidor
+		<-done
+		return
+	}()
 
-	// process event
-	e.Process(e)
+	go func() {
+		for {
+			e := EB.Get() // consome um evento
+			e.Process(e)  // processa o evento
+		}
+	}()
 }

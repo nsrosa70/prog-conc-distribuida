@@ -42,3 +42,7 @@ func (eb *ChanEventBuffer) Get() event.Event {
 
 	return e
 }
+
+func (s *ChanEventBuffer) BufferSize() int {
+	return len(s.buffer)
+}

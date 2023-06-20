@@ -58,3 +58,7 @@ func (b *MonitorEventBuffer) Get() event.Event {
 
 	return e
 }
+
+func (s *MonitorEventBuffer) BufferSize() int {
+	return len(s.buffer)
+}
