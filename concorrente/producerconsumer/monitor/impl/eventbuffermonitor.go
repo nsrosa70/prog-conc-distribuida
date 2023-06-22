@@ -2,6 +2,7 @@ package monitor
 
 import (
 	"aulas/concorrente/producerconsumer/event"
+	"aulas/concorrente/producerconsumer/eventbuffer"
 	"runtime"
 	"sync"
 )
@@ -14,16 +15,15 @@ type EventBufferMonitor interface {
 }
 
 type MonitorEventBuffer struct { // all variable are private, i.e., non-capital letter
-	mu       *sync.Mutex
-	capacity int
-	buffer   []event.Event
+	mu *sync.Mutex
+	eb eventbuffer.EventBuffer
 }
 
-func NewMonitorEventBuffer(capacity int) *MonitorEventBuffer {
+func NewMonitorEventBuffer(capacity, consumed int) *MonitorEventBuffer {
+	eventBuffer := eventbuffer.EventBuffer{Capacity: capacity, Buffer: []event.Event{}, Consumed: consumed}
 	return &MonitorEventBuffer{
-		mu:       &sync.Mutex{},
-		capacity: capacity,
-		buffer:   []event.Event{},
+		mu: &sync.Mutex{},
+		eb: eventBuffer,
 	}
 }
 
@@ -36,29 +36,30 @@ func (b *MonitorEventBuffer) signal() {
 
 func (b *MonitorEventBuffer) Add(e event.Event) {
 	b.wait()
-	for len(b.buffer) == b.capacity {
+	for len(b.eb.Buffer) == b.eb.Capacity {
 		b.mu.Unlock()
 		runtime.Gosched()
 		b.mu.Lock()
 	}
-	b.buffer = append(b.buffer, e)
+	b.eb.Buffer = append(b.eb.Buffer, e)
 	b.signal()
 }
 
 func (b *MonitorEventBuffer) Get() event.Event {
 	b.wait()
-	for len(b.buffer) == 0 {
+	for len(b.eb.Buffer) == 0 {
+		if b.eb.Consumed == 0 {
+			b.mu.Unlock()
+			return event.Event{E: ""}
+		}
 		b.mu.Unlock()
 		runtime.Gosched()
 		b.mu.Lock()
 	}
-	e := b.buffer[0]
-	b.buffer = b.buffer[1:]
+	e := b.eb.Buffer[0]
+	b.eb.Buffer = b.eb.Buffer[1:]
+	b.eb.Consumed--
 	b.signal()
 
 	return e
-}
-
-func (s *MonitorEventBuffer) BufferSize() int {
-	return len(s.buffer)
 }

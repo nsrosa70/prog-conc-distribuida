@@ -2,46 +2,47 @@ package cond
 
 import (
 	"aulas/concorrente/producerconsumer/event"
+	"aulas/concorrente/producerconsumer/eventbuffer"
 	"sync"
 )
 
 type CondEventBuffer struct {
-	cond     *sync.Cond
-	capacity int
-	buffer   []event.Event
+	cond *sync.Cond
+	eb   eventbuffer.EventBuffer
 }
 
-func NewCondEventBuffer(capacity int) *CondEventBuffer {
+func NewCondEventBuffer(capacity, consumed int) *CondEventBuffer {
+	eventBuffer := eventbuffer.EventBuffer{Capacity: capacity, Buffer: []event.Event{}, Consumed: consumed}
 	return &CondEventBuffer{
-		cond:     sync.NewCond(&sync.Mutex{}),
-		capacity: capacity,
-		buffer:   []event.Event{},
+		cond: sync.NewCond(&sync.Mutex{}),
+		eb:   eventBuffer,
 	}
 }
 
-func (eb *CondEventBuffer) Add(e event.Event) {
-	eb.cond.L.Lock()
-	for len(eb.buffer) == eb.capacity {
-		eb.cond.Wait()
+func (b *CondEventBuffer) Add(e event.Event) {
+	b.cond.L.Lock()
+	for len(b.eb.Buffer) == b.eb.Capacity {
+		b.cond.Wait()
 	}
-	eb.buffer = append(eb.buffer, e)
-	eb.cond.Broadcast()
-	eb.cond.L.Unlock()
+	b.eb.Buffer = append(b.eb.Buffer, e)
+	b.cond.Broadcast()
+	b.cond.L.Unlock()
 }
 
-func (eb *CondEventBuffer) Get() event.Event {
-	eb.cond.L.Lock()
-	for len(eb.buffer) == 0 {
-		eb.cond.Wait()
+func (b *CondEventBuffer) Get() event.Event {
+	b.cond.L.Lock()
+	for len(b.eb.Buffer) == 0 {
+		if b.eb.Consumed == 0 {
+			b.cond.L.Unlock()
+			return event.Event{E: ""}
+		}
+		b.cond.Wait()
 	}
-	e := eb.buffer[0]
-	eb.buffer = eb.buffer[1:]
-	eb.cond.Broadcast()
-	eb.cond.L.Unlock()
+	e := b.eb.Buffer[0]
+	b.eb.Buffer = b.eb.Buffer[1:]
+	b.eb.Consumed--
+	b.cond.Broadcast()
+	b.cond.L.Unlock()
 
 	return e
-}
-
-func (s *CondEventBuffer) BufferSize() int {
-	return len(s.buffer)
 }

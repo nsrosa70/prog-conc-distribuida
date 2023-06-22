@@ -2,48 +2,49 @@ package semaforo
 
 import (
 	"aulas/concorrente/producerconsumer/event"
+	"aulas/concorrente/producerconsumer/eventbuffer"
 	"runtime"
 )
 
 type SemaforoEventBuffer struct {
-	sem      *Semaforo
-	capacity int
-	buffer   []event.Event
+	sem *Semaforo
+	eb  eventbuffer.EventBuffer
 }
 
-func NewSemaforoEventBuffer(capacity int) *SemaforoEventBuffer {
+func NewSemaforoEventBuffer(capacity, consumed int) *SemaforoEventBuffer {
+	eventBuffer := eventbuffer.EventBuffer{Capacity: capacity, Buffer: []event.Event{}, Consumed: consumed}
 	return &SemaforoEventBuffer{
-		sem:      NewSemaphore(1),
-		capacity: capacity,
-		buffer:   []event.Event{},
+		sem: NewSemaphore(1),
+		eb:  eventBuffer,
 	}
 }
 
-func (s *SemaforoEventBuffer) Add(e event.Event) {
-	s.sem.P()
-	for len(s.buffer) == s.capacity {
-		s.sem.V()
+func (b *SemaforoEventBuffer) Add(e event.Event) {
+	b.sem.P()
+	for len(b.eb.Buffer) == b.eb.Capacity {
+		b.sem.V()
 		runtime.Gosched()
-		s.sem.P()
+		b.sem.P()
 	}
-	s.buffer = append(s.buffer, e)
-	s.sem.V()
+	b.eb.Buffer = append(b.eb.Buffer, e)
+	b.sem.V()
 }
 
-func (s *SemaforoEventBuffer) Get() event.Event {
-	s.sem.P()
-	for len(s.buffer) == 0 {
-		s.sem.V()
+func (b *SemaforoEventBuffer) Get() event.Event {
+	b.sem.P()
+	for len(b.eb.Buffer) == 0 {
+		if b.eb.Consumed == 0 {
+			b.sem.V()
+			return event.Event{E: ""}
+		}
+		b.sem.V()
 		runtime.Gosched()
-		s.sem.P()
+		b.sem.P()
 	}
-	ret := s.buffer[0]
-	s.buffer = s.buffer[1:]
-	s.sem.V()
+	ret := b.eb.Buffer[0]
+	b.eb.Buffer = b.eb.Buffer[1:]
+	b.eb.Consumed--
+	b.sem.V()
 
 	return ret
-}
-
-func (s *SemaforoEventBuffer) BufferSize() int {
-	return len(s.buffer)
 }

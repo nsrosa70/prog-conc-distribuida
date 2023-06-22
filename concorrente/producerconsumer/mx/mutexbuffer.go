@@ -2,49 +2,50 @@ package mx
 
 import (
 	"aulas/concorrente/producerconsumer/event"
+	"aulas/concorrente/producerconsumer/eventbuffer"
 	"runtime"
 	"sync"
 )
 
 type MutexEventBuffer struct {
-	mu       sync.Mutex
-	capacity int
-	buffer   []event.Event
+	mu sync.Mutex
+	eb eventbuffer.EventBuffer
 }
 
-func NewMutexEventBuffer(capacity int) *MutexEventBuffer {
+func NewMutexEventBuffer(capacity, consumed int) *MutexEventBuffer {
+	eventBuffer := eventbuffer.EventBuffer{Capacity: capacity, Buffer: []event.Event{}, Consumed: consumed}
 	return &MutexEventBuffer{
-		mu:       sync.Mutex{},
-		capacity: capacity,
-		buffer:   []event.Event{},
+		mu: sync.Mutex{},
+		eb: eventBuffer,
 	}
 }
 
-func (s *MutexEventBuffer) BufferSize() int {
-	return len(s.buffer)
-}
-
-func (s *MutexEventBuffer) Add(e event.Event) {
-	s.mu.Lock()
-	for len(s.buffer) == s.capacity {
-		s.mu.Unlock()
+func (b *MutexEventBuffer) Add(e event.Event) {
+	b.mu.Lock()
+	for len(b.eb.Buffer) == b.eb.Capacity {
+		b.mu.Unlock()
 		runtime.Gosched()
-		s.mu.Lock()
+		b.mu.Lock()
 	}
-	s.buffer = append(s.buffer, e)
-	s.mu.Unlock()
+	b.eb.Buffer = append(b.eb.Buffer, e)
+	b.mu.Unlock()
 }
 
-func (s *MutexEventBuffer) Get() event.Event {
-	s.mu.Lock()
-	for len(s.buffer) == 0 {
-		s.mu.Unlock()
+func (b *MutexEventBuffer) Get() event.Event {
+	b.mu.Lock()
+	for len(b.eb.Buffer) == 0 {
+		if b.eb.Consumed == 0 {
+			b.mu.Unlock()
+			return event.Event{E: ""}
+		}
+		b.mu.Unlock()
 		runtime.Gosched()
-		s.mu.Lock()
+		b.mu.Lock()
 	}
-	ret := s.buffer[0]
-	s.buffer = s.buffer[1:]
-	s.mu.Unlock()
+	e := b.eb.Buffer[0]
+	b.eb.Buffer = b.eb.Buffer[1:]
+	b.eb.Consumed--
+	b.mu.Unlock()
 
-	return ret
+	return e
 }

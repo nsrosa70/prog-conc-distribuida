@@ -2,52 +2,49 @@ package channel
 
 import (
 	"aulas/concorrente/producerconsumer/event"
+	"aulas/concorrente/producerconsumer/eventbuffer"
 	"runtime"
-	"sync/atomic"
 )
 
 type ChanEventBuffer struct {
-	ch       chan bool
-	capacity int
-	buffer   []event.Event
-	size     int32
+	ch chan bool
+	eb eventbuffer.EventBuffer
 }
 
-func NewChanEventBuffer(capacity int) *ChanEventBuffer {
+func NewChanEventBuffer(capacity int, consumed int) *ChanEventBuffer {
+	eventBuffer := eventbuffer.EventBuffer{Capacity: capacity, Buffer: []event.Event{}, Consumed: consumed}
 	return &ChanEventBuffer{
-		ch:       make(chan bool, 1),
-		capacity: capacity,
-		buffer:   []event.Event{},
+		ch: make(chan bool, 1),
+		eb: eventBuffer,
 	}
 }
 
-func (eb *ChanEventBuffer) Add(e event.Event) {
-	eb.ch <- true
-	for len(eb.buffer) == eb.capacity {
-		<-eb.ch
+func (b *ChanEventBuffer) Add(e event.Event) {
+	b.ch <- true
+	for len(b.eb.Buffer) == b.eb.Capacity {
+		<-b.ch
 		runtime.Gosched()
-		eb.ch <- true
+		b.ch <- true
 	}
-	eb.buffer = append(eb.buffer, e)
-	eb.size++
-	<-eb.ch
+	b.eb.Buffer = append(b.eb.Buffer, e)
+	<-b.ch
 }
 
-func (eb *ChanEventBuffer) Get() event.Event {
-	eb.ch <- true
-	for len(eb.buffer) == 0 {
-		<-eb.ch
+func (b *ChanEventBuffer) Get() event.Event {
+	b.ch <- true
+	for len(b.eb.Buffer) == 0 {
+		if b.eb.Consumed == 0 {
+			<-b.ch
+			return event.Event{E: ""}
+		}
+		<-b.ch
 		runtime.Gosched()
-		eb.ch <- true
+		b.ch <- true
 	}
-	e := eb.buffer[0]
-	eb.buffer = eb.buffer[1:]
-	eb.size--
-	<-eb.ch
+	e := b.eb.Buffer[0]
+	b.eb.Buffer = b.eb.Buffer[1:]
+	b.eb.Consumed--
+	<-b.ch
 
 	return e
-}
-
-func (eb *ChanEventBuffer) Size() int32 {
-	return atomic.LoadInt32(&eb.size)
 }
