@@ -6,14 +6,17 @@ import (
 	"fmt"
 	"strconv"
 	"sync"
+	"sync/atomic"
 	"time"
 )
 
 const NumeroDeProdutores = 1
-const NumeroDeConsumidores = 5
+const NumeroDeConsumidores = 2
 const TamanhoDaAmostra = 1
 const CapacidadeDoBuffer = 1 // 1, 100, 1.000
-const NumeroDeItens = 10000
+const NumeroDeItens = 2
+
+var DoneP int32
 
 //var EB *mx.MutexEventBuffer
 
@@ -28,14 +31,13 @@ var EB *channel.ChanEventBuffer
 //var EB = *new(interface{})
 
 func main() {
-	wgC := sync.WaitGroup{}
 	wgP := sync.WaitGroup{}
-	done := make(chan bool)
+	wgC := sync.WaitGroup{}
 
 	//EB = primitive("Mutex")
 	//EB = mx.NewMutexEventBuffer(CapacidadeDoBuffer)
 	//EB = cond.NewCondEventBuffer(CapacidadeDoBuffer)
-	//EB = channel.NewChanEventBuffer(CapacidadeDoBuffer)
+	EB = channel.NewChanEventBuffer(CapacidadeDoBuffer)
 	//EB = semaforo.NewSemaforoEventBuffer(CapacidadeDoBuffer)
 	//EB = monitor.NewMonitorEventBuffer(CapacidadeDoBuffer)
 
@@ -43,21 +45,18 @@ func main() {
 		t1 := time.Now()
 		for i := 0; i < NumeroDeConsumidores; i++ { // inicia os consumidores
 			wgC.Add(1)
-			go consumidor(i, &wgC, done)
+			go consumidor(i, &wgC)
 		}
 
 		for i := 0; i < NumeroDeProdutores; i++ { // inicia os produtores
 			wgP.Add(1)
 			go produtor(i, &wgP)
 		}
-		wgP.Wait() // espera os produtores concluirem
 
-		go func() { // checa quando o buffer esvazia
-			for EB.BufferSize() != 0 {
-			}
-			done <- true // produtores concluiram e a fila esvaziou
-		}()
-		wgC.Wait() // espera os consumidores concluirem
+		wgP.Wait()
+		atomic.StoreInt32(&DoneP, 1)
+		wgC.Wait()
+
 		t2 := time.Now().Sub(t1).Milliseconds()
 		fmt.Println(t2)
 	}
@@ -72,18 +71,16 @@ func produtor(id int, wg *sync.WaitGroup) {
 	}
 }
 
-func consumidor(id int, wg *sync.WaitGroup, done chan bool) {
+func consumidor(id int, wg *sync.WaitGroup) {
 	defer wg.Done()
 
-	go func() { // usado para encerrar o consumidor
-		<-done
-		return
-	}()
-
-	go func() {
-		for {
-			e := EB.Get() // consome um evento
-			e.Process(e)  // processa o evento
+	for {
+		if EB.Size() > 0 {
+			e := EB.Get()
+			//fmt.Println("here")
+			e.Process(e)
+		} else if atomic.LoadInt32(&DoneP) == 1 {
+			break
 		}
-	}()
+	}
 }
