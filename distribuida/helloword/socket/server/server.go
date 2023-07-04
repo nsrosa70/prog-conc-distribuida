@@ -14,7 +14,7 @@ func main() {
 
 	//HelloServerUDP()
 
-	_,_ = fmt.Scanln()
+	_, _ = fmt.Scanln()
 }
 
 func HelloServerTCP() {
@@ -38,7 +38,7 @@ func HelloServerTCP() {
 	// aguarda/aceita conexão
 	conn, err := ln.Accept()
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println(err.(net.Error))
 		os.Exit(0)
 	}
 
@@ -46,14 +46,14 @@ func HelloServerTCP() {
 	defer func(conn net.Conn) {
 		err := conn.Close()
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println(err.(net.Error))
 			os.Exit(0)
 		}
 	}(conn)
 
 	// recebe e processa requests
 	for {
-        // recebe request terminado com '\n'
+		// recebe request terminado com '\n'
 		req, err := bufio.NewReader(conn).ReadString('\n')
 		if err != nil {
 			fmt.Println(err)
@@ -64,7 +64,7 @@ func HelloServerTCP() {
 		rep := strings.ToUpper(req)
 
 		// envia resposta
-		_, err = conn.Write([]byte(rep+"\n"))
+		_, err = conn.Write([]byte(rep + "\n"))
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(0)
@@ -110,7 +110,7 @@ func HelloServerUDP() {
 		}
 
 		// processa request
-		rep = []byte (strings.ToUpper(string(req)))
+		rep = []byte(strings.ToUpper(string(req)))
 
 		// envia reposta
 		_, err = conn.WriteTo(rep, addr)
@@ -120,4 +120,3 @@ func HelloServerUDP() {
 		}
 	}
 }
-

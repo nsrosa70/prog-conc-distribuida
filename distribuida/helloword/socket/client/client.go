@@ -43,7 +43,7 @@ func HelloClientTCP(n int) {
 		// cria request
 		req := "Mensagem " + strconv.Itoa(i)
 
-		// envia mensage para o servidor
+		// envia mensagem para o servidor
 		_, err := fmt.Fprintf(conn, req+"\n")
 		if err != nil {
 			fmt.Println(err)
