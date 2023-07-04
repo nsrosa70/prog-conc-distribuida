@@ -13,7 +13,7 @@ import (
 const NumeroDeProdutores = 100
 const NumeroDeConsumidores = 100
 const TamanhoDaAmostra = 100
-const CapacidadeDoBuffer = 1 // 1, 100, 1.000
+const CapacidadeDoBuffer = 1000 // 1, 100, 1.000
 const NumeroDeItens = 10000
 
 var EB eventbuffer.IEventBuffer
@@ -22,7 +22,7 @@ func main() {
 	wg := sync.WaitGroup{}
 
 	for idx := 0; idx < TamanhoDaAmostra; idx++ {
-		EB = shared.NewEventBuffer("Monitor", CapacidadeDoBuffer, NumeroDeProdutores*NumeroDeItens) // tipo de primitiva
+		EB = shared.NewEventBuffer("Channel", CapacidadeDoBuffer, NumeroDeProdutores*NumeroDeItens) // tipo de primitiva
 		t1 := time.Now()
 		for i := 0; i < NumeroDeConsumidores; i++ { // inicia os consumidores
 			wg.Add(1)
