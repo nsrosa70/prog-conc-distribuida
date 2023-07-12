@@ -1,6 +1,6 @@
 package impl
 
-import "distribuida/calculadora/shared"
+import "aulas/distribuida/calculadora/shared"
 
 type Calculadora struct{}
 

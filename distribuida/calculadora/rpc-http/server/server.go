@@ -1,11 +1,12 @@
 package main
+
 import (
-	"distribuida/calculadora/impl"
+	"aulas/distribuida/calculadora/impl"
+	"aulas/distribuida/calculadora/shared"
 	"fmt"
 	"net"
 	"net/http"
 	"net/rpc"
-	"shared"
 	"strconv"
 )
 
@@ -23,10 +24,9 @@ func main() {
 
 	// create tcp listen
 	l, err := net.Listen("tcp", ":"+strconv.Itoa(shared.CALCULATOR_PORT))
-	shared.ChecaErro(err,"Servidor não inicializado")
+	shared.ChecaErro(err, "Servidor não inicializado")
 
 	// wait for calls
 	fmt.Println("Servidor pronto (RPC-HTTP) ...\n")
 	http.Serve(l, nil)
 }
-

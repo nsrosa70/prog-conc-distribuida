@@ -1,7 +1,7 @@
 package main
 
 import (
-	"distribuida/calculadora/shared"
+	"aulas/distribuida/calculadora/shared"
 	"fmt"
 	"log"
 	"net/rpc"
@@ -10,7 +10,7 @@ import (
 
 func clientRPCTCPPerformance() {
 	var reply int
-	times := [] time.Duration{}
+	times := []time.Duration{}
 	var SAMPLE_SIZE = 1000
 
 	// conecta ao servidor

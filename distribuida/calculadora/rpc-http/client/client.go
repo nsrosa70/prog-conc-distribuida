@@ -1,8 +1,9 @@
 package main
+
 import (
+	"aulas/distribuida/calculadora/shared"
 	"fmt"
 	"net/rpc"
-	"shared"
 	"strconv"
 	"time"
 )
@@ -12,8 +13,7 @@ func main() {
 	var reply int
 	// connect to servidor
 	client, err := rpc.DialHTTP("tcp", ":"+strconv.Itoa(shared.CALCULATOR_PORT))
-	shared.ChecaErro(err,"O Servidor não está pronto")
-
+	shared.ChecaErro(err, "O Servidor não está pronto")
 
 	// make requests
 	//fmt.Println("Client started execution... ")

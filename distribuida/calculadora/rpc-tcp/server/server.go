@@ -1,14 +1,14 @@
 package main
 
 import (
-	"distribuida/calculadora/impl"
+	"aulas/distribuida/calculadora/impl"
 	"fmt"
 	"net"
 	"net/rpc"
 	"os"
 )
 
-func servidor(){
+func servidor() {
 
 	// cria instância da calculadora
 	calculadora := new(impl.CalculadoraRPC)
@@ -45,4 +45,3 @@ func main() {
 
 	_, _ = fmt.Scanln()
 }
-
