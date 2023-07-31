@@ -18,19 +18,16 @@ func servidor() {
 	fibonacci := new(fibonacci.FibonacciRPC)
 
 	// cria um novo servidor e registra a calculadora
-	serverCalc := rpc.NewServer()
-	err := serverCalc.RegisterName("Calculator", calculadora)
+	server := rpc.NewServer()
+	err := server.RegisterName("Calculator", calculadora)
 	shared.ChecaErro(err, "Não foi possível registrar a Calculadora no servidor...")
 
-	// cria um novo servidor e registra o Fibonacci
-	serverFibo := rpc.NewServer()
-	err = serverFibo.RegisterName("Fibonacci", fibonacci)
+	err = server.RegisterName("Fibonacci", fibonacci)
 	shared.ChecaErro(err, "Não foi possível registrar o Fibonacci no servidor...")
 
 	// cria um listener TCP (Calculadora)
 	ln, err := net.Listen("tcp", ":"+strconv.Itoa(shared.CALCULATOR_PORT))
 	shared.ChecaErro(err, "Listen TCP da Calculadora não pode ser criado...")
-
 	defer func(ln net.Listener) {
 		var err = ln.Close()
 		shared.ChecaErro(err, "Listen TCP da Calculadora não pode ser fechado...")
@@ -41,12 +38,12 @@ func servidor() {
 	shared.ChecaErro(err, "Listen TCP do Fibonacci não pode ser criado...")
 
 	// associa um handler HTTP ao servidor (Fibonacci)
-	serverFibo.HandleHTTP("/", "/debug")
+	server.HandleHTTP("/", "/debug")
 
 	// aguarda por invocações
 	fmt.Println("Servidor está pronto (RPC-TCP/HTTP)...")
-	go serverCalc.Accept(ln)
-	http.Serve(l, nil)
+	go server.Accept(ln) // calculadora
+	http.Serve(l, nil)   // fibonacci
 }
 
 func main() {
