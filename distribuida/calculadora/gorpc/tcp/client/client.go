@@ -1,10 +1,11 @@
 package main
 
 import (
-	"aulas/distribuida/calculadora/shared"
+	"aulas/distribuida/shared"
 	"fmt"
 	"log"
 	"net/rpc"
+	"strconv"
 	"time"
 )
 
@@ -44,27 +45,21 @@ func clientRPCTCPPerformance() {
 func Cliente() {
 	var reply int
 
-	// conecta ao servidor
-	client, err := rpc.Dial("tcp", "localhost:1313")
-	if err != nil {
-		log.Fatal(err)
-	}
+	// conecta ao servidor (Calculadora)
+	clientCalc, err := rpc.Dial("tcp", ":"+strconv.Itoa(shared.CALCULATOR_PORT))
+	shared.ChecaErro(err, "Não foi possível estabelecer uma conexão TCP com o servidor da Calculadora...")
 
-	defer func(client *rpc.Client) {
-		var err = client.Close()
-		if err != nil {
+	defer func(clientCalc *rpc.Client) {
+		var err = clientCalc.Close()
+		shared.ChecaErro(err, "Não foi possível fechar a conexão TCP com o servidor da Calculadora...")
+	}(clientCalc)
 
-		}
-	}(client)
+	// invoca operação remota da calculadora
+	args := shared.Args{A: 3, B: 4}
+	err = clientCalc.Call("Calculator.Add", args, &reply)
+	shared.ChecaErro(err, "Erro na invocação da Calculadora remota...")
 
-	// invoca operação remota
-	args := shared.Args{A: 1, B: 2}
-	err = client.Call("Calculator.Add", args, &reply)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Printf("%v + %v = %v \n", args.A, args.B, reply)
+	fmt.Printf("Add(%v,%v) = %v \n", args.A, args.B, reply)
 }
 
 func main() {

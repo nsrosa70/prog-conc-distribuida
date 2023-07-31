@@ -1,7 +1,7 @@
 package impl
 
 import (
-	"aulas/distribuida/calculadora/shared"
+	"aulas/distribuida/shared"
 	"errors"
 )
 
