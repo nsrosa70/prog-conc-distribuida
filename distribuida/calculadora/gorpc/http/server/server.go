@@ -23,7 +23,7 @@ func main() {
 	server.HandleHTTP("/", "/debug")
 
 	// // cria um listener TCP
-	l, err := net.Listen("tcp", ":"+strconv.Itoa(shared.CALCULATOR_PORT))
+	l, err := net.Listen("tcp", ":"+strconv.Itoa(shared.CalculatorPort))
 	shared.ChecaErro(err, "Servidor não inicializado")
 
 	// aguarda por invocações

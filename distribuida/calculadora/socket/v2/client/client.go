@@ -1,7 +1,7 @@
 package main
 
 import (
-	"distribuida/calculadora/shared"
+	"aulas/distribuida/shared"
 	"encoding/json"
 	"fmt"
 	"net"

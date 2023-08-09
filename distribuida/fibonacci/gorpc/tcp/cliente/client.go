@@ -11,7 +11,7 @@ func Cliente() {
 	var reply int
 
 	// conecta ao consumer (Fibonacci)
-	client, err := rpc.Dial("tcp", ":"+strconv.Itoa(shared.FIBONACCI_PORT))
+	client, err := rpc.Dial("tcp", ":"+strconv.Itoa(shared.FibonacciPort))
 	shared.ChecaErro(err, "Não foi possível criar uma conexão TCP para o consumer Fibonacci...")
 
 	defer func(client *rpc.Client) {

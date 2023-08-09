@@ -20,7 +20,7 @@ func servidor() {
 	shared.ChecaErro(err, "Não foi possível registrar o Fibonacci no consumer...")
 
 	// cria um listener TCP
-	ln, err := net.Listen("tcp", ":"+strconv.Itoa(shared.FIBONACCI_PORT))
+	ln, err := net.Listen("tcp", ":"+strconv.Itoa(shared.FibonacciPort))
 	shared.ChecaErro(err, "Não foi possível criar um listener para o Fibonacci...")
 
 	defer func(ln net.Listener) {

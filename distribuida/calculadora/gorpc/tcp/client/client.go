@@ -39,14 +39,14 @@ func clientRPCTCPPerformance() {
 	for i := range times {
 		totalTime += times[i]
 	}
-	fmt.Printf("Total Duration: %v [%v]", totalTime, shared.SAMPLE_SIZE)
+	fmt.Printf("Total Duration: %v [%v]", totalTime, shared.SampleSize)
 }
 
 func Cliente() {
 	var reply int
 
 	// conecta ao consumer (Calculadora)
-	clientCalc, err := rpc.Dial("tcp", ":"+strconv.Itoa(shared.CALCULATOR_PORT))
+	clientCalc, err := rpc.Dial("tcp", ":"+strconv.Itoa(shared.CalculatorPort))
 	shared.ChecaErro(err, "Não foi possível estabelecer uma conexão TCP com o consumer da Calculadora...")
 
 	defer func(clientCalc *rpc.Client) {

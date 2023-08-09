@@ -20,7 +20,7 @@ func servidor() {
 	shared.ChecaErro(err, "Não foi possível registrar a Calculadora no consumer...")
 
 	// cria um listener TCP
-	ln, err := net.Listen("tcp", ":"+strconv.Itoa(shared.CALCULATOR_PORT))
+	ln, err := net.Listen("tcp", ":"+strconv.Itoa(shared.CalculatorPort))
 	shared.ChecaErro(err, "Não foi possível criar um listener para a Calculadora...")
 	defer func(ln net.Listener) {
 		var err = ln.Close()

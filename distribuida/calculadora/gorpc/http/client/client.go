@@ -12,7 +12,7 @@ func main() {
 	var reply int
 
 	// conecta ao consumer
-	client, err := rpc.DialHTTP("tcp", ":"+strconv.Itoa(shared.CALCULATOR_PORT))
+	client, err := rpc.DialHTTP("tcp", ":"+strconv.Itoa(shared.CalculatorPort))
 	shared.ChecaErro(err, "O Servidor não está pronto")
 
 	// prepara request

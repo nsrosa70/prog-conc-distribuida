@@ -21,7 +21,7 @@ func servidor() {
 	shared.ChecaErro(err, "Error ao registrar o serviço Fibonacci...")
 
 	// // cria um listener tcp (fibonacci)
-	l, err := net.Listen("tcp", ":"+strconv.Itoa(shared.FIBONACCI_PORT))
+	l, err := net.Listen("tcp", ":"+strconv.Itoa(shared.FibonacciPort))
 	shared.ChecaErro(err, "Servidor não inicializado")
 
 	// associa um handler HTTP ao consumer (Fibonacci)
