@@ -10,22 +10,22 @@ import (
 func Cliente() {
 	var reply int
 
-	// conecta ao servidor (Calculadora)
+	// conecta ao consumer (Calculadora)
 	clientCalc, err := rpc.Dial("tcp", ":"+strconv.Itoa(shared.CALCULATOR_PORT))
-	shared.ChecaErro(err, "Conexão TCP para o servidor da Calucladora não pode ser criada...")
+	shared.ChecaErro(err, "Conexão TCP para o consumer da Calucladora não pode ser criada...")
 
 	defer func(clientCalc *rpc.Client) {
 		var err = clientCalc.Close()
-		shared.ChecaErro(err, "Não foi possível fechar a Conexão TCP para o servidor da Calculadora...")
+		shared.ChecaErro(err, "Não foi possível fechar a Conexão TCP para o consumer da Calculadora...")
 	}(clientCalc)
 
-	// conecta ao servidor (Fibonacci)
+	// conecta ao consumer (Fibonacci)
 	clientFibo, err := rpc.DialHTTP("tcp", ":"+strconv.Itoa(shared.FIBONACCI_PORT))
-	shared.ChecaErro(err, "Conexão TCP para o servidor Fibonacci não pode ser criada...")
+	shared.ChecaErro(err, "Conexão TCP para o consumer Fibonacci não pode ser criada...")
 
 	defer func(clientFibo *rpc.Client) {
 		var err = clientFibo.Close()
-		shared.ChecaErro(err, "Não foi possível fechar a Conexão TCP para o servidor do Fibonacci...")
+		shared.ChecaErro(err, "Não foi possível fechar a Conexão TCP para o consumer do Fibonacci...")
 	}(clientFibo)
 
 	// invoca operação remota da calculadora

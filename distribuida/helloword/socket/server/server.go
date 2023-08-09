@@ -19,7 +19,7 @@ func main() {
 
 func HelloServerTCP() {
 
-	// define o endpoint do servidor TCP
+	// define o endpoint do consumer TCP
 	r, err := net.ResolveTCPAddr("tcp", "localhost:1313")
 	if err != nil {
 		fmt.Println(err)
@@ -76,7 +76,7 @@ func HelloServerUDP() {
 	req := make([]byte, 1024)
 	rep := make([]byte, 1024)
 
-	// define o endpoint do servidor UDP
+	// define o endpoint do consumer UDP
 	addr, err := net.ResolveUDPAddr("udp", "localhost:1313")
 	if err != nil {
 		fmt.Println(err)

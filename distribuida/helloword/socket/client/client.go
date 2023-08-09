@@ -22,7 +22,7 @@ func HelloClientTCP(n int) {
 		os.Exit(0)
 	}
 
-	// connecta ao servidor (sem definir uma porta local)
+	// connecta ao consumer (sem definir uma porta local)
 	conn, err := net.DialTCP("tcp", nil, r)
 	if err != nil {
 		fmt.Println(err)
@@ -43,14 +43,14 @@ func HelloClientTCP(n int) {
 		// cria request
 		req := "Mensagem " + strconv.Itoa(i)
 
-		// envia mensagem para o servidor
+		// envia mensagem para o consumer
 		_, err := fmt.Fprintf(conn, req+"\n")
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(0)
 		}
 
-		// recebe resposta do servidor
+		// recebe resposta do consumer
 		rep, err := bufio.NewReader(conn).ReadString('\n')
 		if err != nil {
 			fmt.Println(err)
@@ -72,14 +72,14 @@ func HelloClientUDP(n int) {
 		os.Exit(0)
 	}
 
-	// conecta ao servidor -- não cria uma conexão
+	// conecta ao consumer -- não cria uma conexão
 	conn, err := net.DialUDP("udp", nil, addr)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(0)
 	}
 
-	// desconecta do servidor
+	// desconecta do consumer
 	defer func(conn *net.UDPConn) {
 		err := conn.Close()
 		if err != nil {
@@ -92,14 +92,14 @@ func HelloClientUDP(n int) {
 		// cria request
 		req = []byte("Mensagem " + strconv.Itoa(i))
 
-		// envia request ao servidor
+		// envia request ao consumer
 		_, err = conn.Write(req)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(0)
 		}
 
-		// recebe resposta do servidor
+		// recebe resposta do consumer
 		_, _, err := conn.ReadFromUDP(rep)
 		if err != nil {
 			fmt.Println(err)

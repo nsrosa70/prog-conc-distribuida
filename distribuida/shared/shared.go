@@ -7,14 +7,22 @@ import (
 	"strconv"
 )
 
-const SAMPLE_SIZE = 10
-const CALCULATOR_PORT = 4040
-const FIBONACCI_PORT = 3030
+const SampleSize = 2
+const CalculatorPort = 4040
+const FibonacciPort = 3030
 const GRPC_PORT = 5050
 const NAMING_PORT = 1414
 const MIOP_REQUEST = 1
 const MIOP_REPLY = 2
 const MAX_NUMBER_CLIENTS = 1
+const RequestQueue = "request_queue"
+const ResponseQueue = "response_queue"
+const PubSubQueue = "pubsub"
+const FanoutExchange = "fanout_exchange"
+const DirectExchange = "direct_exchange"
+const TopicExchange = "topic_exchange"
+const HeadersExchange = "headers_exchange"
+const RoutingKey = "routing_key"
 
 type Message struct {
 	Payload string

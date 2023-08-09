@@ -14,10 +14,10 @@ func servidor() {
 	// cria instância da calculadora
 	fibonacci := new(fibonacci.FibonacciRPC)
 
-	// cria um novo servidor RPC e registra o fibonacci
+	// cria um novo consumer RPC e registra o fibonacci
 	server := rpc.NewServer()
 	err := server.RegisterName("Fibonacci", fibonacci)
-	shared.ChecaErro(err, "Não foi possível registrar o Fibonacci no servidor...")
+	shared.ChecaErro(err, "Não foi possível registrar o Fibonacci no consumer...")
 
 	// cria um listener TCP
 	ln, err := net.Listen("tcp", ":"+strconv.Itoa(shared.FIBONACCI_PORT))

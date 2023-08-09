@@ -11,13 +11,13 @@ func main() {
 	//id, err := os.Hostname()
 	_, err := os.Hostname()
 	if err != nil {
-		fmt.Println("Failed to obtain the host name\n",err)
+		fmt.Println("Failed to obtain the host name\n", err)
 		os.Exit(0)
 	}
 
 	p, err := kafka.NewProducer(&kafka.ConfigMap{
 		"bootstrap.servers": "host1:9092,host2:9092",
-		//"cliente.id": id,
+		//"publisher.id": id,
 		"acks": "all"})
 
 	if err != nil {
@@ -31,7 +31,7 @@ func main() {
 	delivery_chan := make(chan kafka.Event, 10000)
 	err = p.Produce(&kafka.Message{
 		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
-		Value: []byte(value)},
+		Value:          []byte(value)},
 		delivery_chan,
 	)
 

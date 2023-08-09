@@ -15,11 +15,11 @@ func main() {
 	// cria instância da calculadora
 	calculator := new(impl.CalculadoraRPC)
 
-	// cria um novo servidor RPC e registra a calculadora
+	// cria um novo consumer RPC e registra a calculadora
 	server := rpc.NewServer()
 	server.RegisterName("Calculator", calculator)
 
-	// associa um handler HTTP ao servidor
+	// associa um handler HTTP ao consumer
 	server.HandleHTTP("/", "/debug")
 
 	// // cria um listener TCP

@@ -14,7 +14,7 @@ func clientRPCTCPPerformance() {
 	times := []time.Duration{}
 	var SAMPLE_SIZE = 1000
 
-	// conecta ao servidor
+	// conecta ao consumer
 	client, err := rpc.Dial("tcp", "localhost:1313")
 	if err != nil {
 		log.Fatal(err)
@@ -45,13 +45,13 @@ func clientRPCTCPPerformance() {
 func Cliente() {
 	var reply int
 
-	// conecta ao servidor (Calculadora)
+	// conecta ao consumer (Calculadora)
 	clientCalc, err := rpc.Dial("tcp", ":"+strconv.Itoa(shared.CALCULATOR_PORT))
-	shared.ChecaErro(err, "Não foi possível estabelecer uma conexão TCP com o servidor da Calculadora...")
+	shared.ChecaErro(err, "Não foi possível estabelecer uma conexão TCP com o consumer da Calculadora...")
 
 	defer func(clientCalc *rpc.Client) {
 		var err = clientCalc.Close()
-		shared.ChecaErro(err, "Não foi possível fechar a conexão TCP com o servidor da Calculadora...")
+		shared.ChecaErro(err, "Não foi possível fechar a conexão TCP com o consumer da Calculadora...")
 	}(clientCalc)
 
 	// invoca operação remota da calculadora

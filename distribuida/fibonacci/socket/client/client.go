@@ -41,17 +41,17 @@ func comServer(conn net.Conn) {
 
 	for i := 0; i < NumberRequests; i++ {
 
-		// envia mensagem para o servidor
+		// envia mensagem para o consumer
 		toServer = 8
 		err := enc.Encode(toServer)
 		if err != nil {
-			fmt.Println("Erro no envio dos dados do servidor:", err.Error())
+			fmt.Println("Erro no envio dos dados do consumer:", err.Error())
 		}
 
-		// recebe resposta do servidor
+		// recebe resposta do consumer
 		err = dec.Decode(&fromServer)
 		if err != nil {
-			fmt.Println("Erro no recebimento dos dados do servidor:", err.Error())
+			fmt.Println("Erro no recebimento dos dados do consumer:", err.Error())
 		}
 		fmt.Printf("Fibonacci (%v) = %v\n", toServer, fromServer)
 	}
@@ -59,6 +59,6 @@ func comServer(conn net.Conn) {
 	// envia mensagem de fim de dados
 	err := enc.Encode(EndMessage)
 	if err != nil {
-		fmt.Println("Erro no envio dos dados do servidor:", err.Error())
+		fmt.Println("Erro no envio dos dados do consumer:", err.Error())
 	}
 }
