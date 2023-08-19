@@ -1,4 +1,4 @@
-// socket-client project main.go
+// socket-client project servidor.go
 package main
 
 import (
@@ -49,14 +49,14 @@ func comServerBytes(conn net.Conn) {
 		toServer = "Mensagem #" + strconv.Itoa(i)
 		_, err := conn.Write([]byte(toServer))
 		if err != nil {
-			fmt.Println("Erro no envio dos dados do consumer:", err.Error())
+			fmt.Println("Erro no envio dos dados do servidor:", err.Error())
 		}
 
-		// recebe resposta do consumer
+		// recebe resposta do servidor
 		//mLen, err := conn.Read(fromServer)
 		_, err = conn.Read(fromServer)
 		if err != nil {
-			fmt.Println("Erro no recebimento dos dados do consumer:", err.Error())
+			fmt.Println("Erro no recebimento dos dados do servidor:", err.Error())
 		}
 		//fmt.Println("Dado: ", string(fromServer[:mLen]))
 	}
@@ -70,17 +70,17 @@ func comServerJson(conn net.Conn) {
 
 	for i := 0; i < NumberRequests; i++ {
 
-		// envia mensagem para o consumer
+		// envia mensagem para o servidor
 		toServer = "Message #" + strconv.Itoa(i)
 		err := enc.Encode(toServer)
 		if err != nil {
-			fmt.Println("Erro no envio dos dados do consumer:", err.Error())
+			fmt.Println("Erro no envio dos dados do servidor:", err.Error())
 		}
 
-		// recebe resposta do consumer
+		// recebe resposta do servidor
 		err = dec.Decode(&fromServer)
 		if err != nil {
-			fmt.Println("Erro no recebimento dos dados do consumer:", err.Error())
+			fmt.Println("Erro no recebimento dos dados do servidor:", err.Error())
 		}
 		//fmt.Println("Dado: ", fromServer)
 	}
@@ -88,6 +88,6 @@ func comServerJson(conn net.Conn) {
 	// envia mensagem de fim de dados
 	err := enc.Encode(EndMessage)
 	if err != nil {
-		fmt.Println("Erro no envio dos dados do consumer:", err.Error())
+		fmt.Println("Erro no envio dos dados do servidor:", err.Error())
 	}
 }

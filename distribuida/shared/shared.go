@@ -7,7 +7,14 @@ import (
 	"strconv"
 )
 
-const SampleSize = 2
+// MQTT
+const MQTTHost = "mqtt://localhost:1883"
+const MQTTTopic = "PubSub"
+const MQTTRequest = "request"
+const MQTTReply = "reply"
+
+// Other configurations
+const SampleSize = 100000000
 const CalculatorPort = 4040
 const FibonacciPort = 3030
 const GRPC_PORT = 5050

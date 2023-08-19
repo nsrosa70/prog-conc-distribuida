@@ -46,7 +46,7 @@ func CalculatorClientTCP() {
 			// Prepare request
 			msgToServer := shared.Request{"add", 3, 1}
 
-			// Serialise and send request to consumer
+			// Serialise and send request to servidor
 			err = jsonEncoder.Encode(msgToServer)
 			if err != nil {
 				fmt.Println(err)
@@ -78,14 +78,14 @@ func CalculatorClientTCP() {
 
 		//t1 := time.Now()
 
-		// Serialise and send request to consumer
+		// Serialise and send request to servidor
 		err = jsonEncoder.Encode(msgToServer)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(0)
 		}
 
-		// Receive response from consumer
+		// Receive response from servidor
 		err = jsonDecoder.Decode(&response)
 		if err != nil {
 			fmt.Println(err)

@@ -30,7 +30,7 @@ func CalculatorClientTCP(n int) {
 		os.Exit(0)
 	}
 
-	/// connecta ao consumer (sem definir uma porta local)
+	/// connecta ao servidor (sem definir uma porta local)
 	conn, err := net.DialTCP("tcp", nil, r)
 	if err != nil {
 		fmt.Println(err)
@@ -54,14 +54,14 @@ func CalculatorClientTCP(n int) {
 		// prepara request
 		msgToServer := shared.Request{"add", i, i}
 
-		// serializa e envia request para o consumer
+		// serializa e envia request para o servidor
 		err = jsonEncoder.Encode(msgToServer)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(0)
 		}
 
-		// recebe resposta do consumer
+		// recebe resposta do servidor
 		err = jsonDecoder.Decode(&response)
 		if err != nil {
 			fmt.Println(err)
@@ -111,7 +111,7 @@ func CalculatorClientUDP(n int) {
 			os.Exit(0)
 		}
 
-		// Receive response from consumer
+		// Receive response from servidor
 		err = decoder.Decode(&response)
 		if err != nil {
 			fmt.Println(err)

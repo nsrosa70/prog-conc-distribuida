@@ -16,12 +16,12 @@ func main() {
 
 	// conecta ao broker
 	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
-	shared.ChecaErro(err, "Não foi possível se conectar ao consumer de mensageria")
+	shared.ChecaErro(err, "Não foi possível se conectar ao servidor de mensageria")
 	defer conn.Close()
 
 	// cria o canal
 	ch, err := conn.Channel()
-	shared.ChecaErro(err, "Não foi possível estabelecer um canal de comunicação com o consumer de mensageria")
+	shared.ChecaErro(err, "Não foi possível estabelecer um canal de comunicação com o servidor de mensageria")
 	defer ch.Close()
 
 	// declara a fila para as respostas
@@ -34,7 +34,7 @@ func main() {
 		nil,
 	)
 
-	// cria consumer da fila de response
+	// cria servidor da fila de response
 	msgs, err := ch.Consume(
 		replyQueue.Name,
 		"",
@@ -43,7 +43,7 @@ func main() {
 		false,
 		false,
 		nil)
-	shared.ChecaErro(err, "Falha ao registrar o consumer no broker")
+	shared.ChecaErro(err, "Falha ao registrar o servidor no broker")
 
 	for i := 0; i < shared.SampleSize; i++ {
 		// prepara mensagem
@@ -66,7 +66,7 @@ func main() {
 			},
 		)
 
-		// recebe mensagem do consumer de mensageria
+		// recebe mensagem do servidor de mensageria
 		m := <-msgs
 
 		// deserializada e imprime mensagem na tela

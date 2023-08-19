@@ -21,7 +21,7 @@ func main() {
 
 func CalculatorServerTCP() {
 
-	//  define o endpoint do consumer TCP
+	//  define o endpoint do servidor TCP
 	r, err := net.ResolveTCPAddr("tcp", "localhost:1314")
 	if err != nil {
 		fmt.Println(err)
@@ -67,7 +67,7 @@ func HandleTCPConnection(conn net.Conn) {
 	jsonEncoder := json.NewEncoder(conn)
 
 	for {
-		// recebe & unmarshall requests do publisher
+		// recebe & unmarshall requests do cliente
 		err := jsonDecoder.Decode(&msgFromClient)
 		if err != nil && err.Error() == "EOF" {
 			conn.Close()
@@ -80,7 +80,7 @@ func HandleTCPConnection(conn net.Conn) {
 		// cria resposta
 		msgToClient := shared.Reply{[]interface{}{r}}
 
-		// serializa & envia resposta para o publisher
+		// serializa & envia resposta para o cliente
 		err = jsonEncoder.Encode(msgToClient)
 		if err != nil {
 			fmt.Println(err)

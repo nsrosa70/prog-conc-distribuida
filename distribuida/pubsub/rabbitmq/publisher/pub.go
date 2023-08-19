@@ -28,12 +28,12 @@ func defaultPublihser(wg *sync.WaitGroup) {
 
 	// conecta ao broker
 	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
-	shared.ChecaErro(err, "Não foi possível se conectar ao consumer de mensageria")
+	shared.ChecaErro(err, "Não foi possível se conectar ao servidor de mensageria")
 	defer conn.Close()
 
 	// cria o canal
 	ch, err := conn.Channel()
-	shared.ChecaErro(err, "Não foi possível estabelecer um canal de comunicação com o consumer de mensageria")
+	shared.ChecaErro(err, "Não foi possível estabelecer um canal de comunicação com o servidor de mensageria")
 	defer ch.Close()
 
 	// envia mensagens
@@ -50,7 +50,7 @@ func defaultPublihser(wg *sync.WaitGroup) {
 			false,
 			false,
 			amqp.Publishing{ContentType: "text/plain", Body: msgBytes})
-		shared.ChecaErro(err, "Falha ao enviar a mensagem para o consumer de mensageria")
+		shared.ChecaErro(err, "Falha ao enviar a mensagem para o servidor de mensageria")
 
 		fmt.Printf("Publisher[Default]: %v \n", msg.Payload)
 	}
@@ -61,12 +61,12 @@ func directPublihser(wg *sync.WaitGroup) {
 
 	// conecta ao broker
 	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
-	shared.ChecaErro(err, "Não foi possível se conectar ao consumer de mensageria")
+	shared.ChecaErro(err, "Não foi possível se conectar ao servidor de mensageria")
 	defer conn.Close()
 
 	// cria o canal
 	ch, err := conn.Channel()
-	shared.ChecaErro(err, "Não foi possível estabelecer um canal de comunicação com o consumer de mensageria")
+	shared.ChecaErro(err, "Não foi possível estabelecer um canal de comunicação com o servidor de mensageria")
 	defer ch.Close()
 
 	// declara o tipo de exchange
@@ -92,7 +92,7 @@ func directPublihser(wg *sync.WaitGroup) {
 			false,
 			false,
 			amqp.Publishing{ContentType: "text/plain", Body: msgBytes})
-		shared.ChecaErro(err, "Falha ao enviar a mensagem para o consumer de mensageria")
+		shared.ChecaErro(err, "Falha ao enviar a mensagem para o servidor de mensageria")
 
 		fmt.Printf("Publisher[Direct]: %v \n", msg.Payload)
 	}
@@ -103,12 +103,12 @@ func fanoutPublihser(wg *sync.WaitGroup) {
 
 	// conecta ao broker
 	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
-	shared.ChecaErro(err, "Não foi possível se conectar ao consumer de mensageria")
+	shared.ChecaErro(err, "Não foi possível se conectar ao servidor de mensageria")
 	defer conn.Close()
 
 	// cria o canal
 	ch, err := conn.Channel()
-	shared.ChecaErro(err, "Não foi possível estabelecer um canal de comunicação com o consumer de mensageria")
+	shared.ChecaErro(err, "Não foi possível estabelecer um canal de comunicação com o servidor de mensageria")
 	defer ch.Close()
 
 	// declara o tipo de exchange
@@ -134,7 +134,7 @@ func fanoutPublihser(wg *sync.WaitGroup) {
 			false,
 			false,
 			amqp.Publishing{ContentType: "text/plain", Body: msgBytes})
-		shared.ChecaErro(err, "Falha ao enviar a mensagem para o consumer de mensageria")
+		shared.ChecaErro(err, "Falha ao enviar a mensagem para o servidor de mensageria")
 
 		fmt.Printf("Publisher[Fanout]: %v \n", msg.Payload)
 	}
@@ -145,12 +145,12 @@ func topicPublisher(wg *sync.WaitGroup) {
 
 	// conecta ao broker
 	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
-	shared.ChecaErro(err, "Não foi possível se conectar ao consumer de mensageria")
+	shared.ChecaErro(err, "Não foi possível se conectar ao servidor de mensageria")
 	defer conn.Close()
 
 	// cria o canal
 	ch, err := conn.Channel()
-	shared.ChecaErro(err, "Não foi possível estabelecer um canal de comunicação com o consumer de mensageria")
+	shared.ChecaErro(err, "Não foi possível estabelecer um canal de comunicação com o servidor de mensageria")
 	defer ch.Close()
 
 	// declara o tipo de exchange
@@ -176,7 +176,7 @@ func topicPublisher(wg *sync.WaitGroup) {
 			false,
 			false,
 			amqp.Publishing{ContentType: "text/plain", Body: msgBytes})
-		shared.ChecaErro(err, "Falha ao enviar a mensagem para o consumer de mensageria")
+		shared.ChecaErro(err, "Falha ao enviar a mensagem para o servidor de mensageria")
 
 		fmt.Printf("Publisher[Topic]: %v \n", msg.Payload)
 	}
@@ -187,12 +187,12 @@ func headersPublisher(wg *sync.WaitGroup) {
 
 	// conecta ao broker
 	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
-	shared.ChecaErro(err, "Não foi possível se conectar ao consumer de mensageria")
+	shared.ChecaErro(err, "Não foi possível se conectar ao servidor de mensageria")
 	defer conn.Close()
 
 	// cria o canal
 	ch, err := conn.Channel()
-	shared.ChecaErro(err, "Não foi possível estabelecer um canal de comunicação com o consumer de mensageria")
+	shared.ChecaErro(err, "Não foi possível estabelecer um canal de comunicação com o servidor de mensageria")
 	defer ch.Close()
 
 	// declara o tipo de exchange
@@ -213,8 +213,8 @@ func headersPublisher(wg *sync.WaitGroup) {
 		shared.ChecaErro(err, "Falha ao serializar a mensagem")
 
 		headers := amqp.Table{
-			"at1": "xxx",
-			"at2": "oi2",
+			"f1": "app1",
+			"f2": "app2",
 		}
 		// publica mensagem
 		err = ch.Publish(shared.HeadersExchange,
@@ -226,7 +226,7 @@ func headersPublisher(wg *sync.WaitGroup) {
 				ContentType: "text/plain",
 				Body:        msgBytes,
 				Headers:     headers})
-		shared.ChecaErro(err, "Falha ao enviar a mensagem para o consumer de mensageria")
+		shared.ChecaErro(err, "Falha ao enviar a mensagem para o servidor de mensageria")
 
 		fmt.Printf("Publisher[Topic]: %v \n", msg.Payload)
 	}

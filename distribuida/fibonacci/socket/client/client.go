@@ -1,4 +1,4 @@
-// socket-client project main.go
+// socket-client project servidor.go
 package main
 
 import (
@@ -41,17 +41,17 @@ func comServer(conn net.Conn) {
 
 	for i := 0; i < NumberRequests; i++ {
 
-		// envia mensagem para o consumer
+		// envia mensagem para o servidor
 		toServer = 8
 		err := enc.Encode(toServer)
 		if err != nil {
-			fmt.Println("Erro no envio dos dados do consumer:", err.Error())
+			fmt.Println("Erro no envio dos dados do servidor:", err.Error())
 		}
 
-		// recebe resposta do consumer
+		// recebe resposta do servidor
 		err = dec.Decode(&fromServer)
 		if err != nil {
-			fmt.Println("Erro no recebimento dos dados do consumer:", err.Error())
+			fmt.Println("Erro no recebimento dos dados do servidor:", err.Error())
 		}
 		fmt.Printf("Fibonacci (%v) = %v\n", toServer, fromServer)
 	}
@@ -59,6 +59,6 @@ func comServer(conn net.Conn) {
 	// envia mensagem de fim de dados
 	err := enc.Encode(EndMessage)
 	if err != nil {
-		fmt.Println("Erro no envio dos dados do consumer:", err.Error())
+		fmt.Println("Erro no envio dos dados do servidor:", err.Error())
 	}
 }

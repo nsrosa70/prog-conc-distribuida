@@ -17,7 +17,7 @@ func main() {
 
 	p, err := kafka.NewProducer(&kafka.ConfigMap{
 		"bootstrap.servers": "host1:9092,host2:9092",
-		//"publisher.id": id,
+		//"cliente.id": id,
 		"acks": "all"})
 
 	if err != nil {

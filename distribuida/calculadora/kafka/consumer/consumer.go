@@ -1,4 +1,5 @@
 package main
+
 import (
 	"fmt"
 	//"github.com/confluentinc/confluent-kafka-go/kafka"
@@ -10,12 +11,12 @@ func main() {
 	run := true // added
 
 	consumer, err := kafka.NewConsumer(&kafka.ConfigMap{
-		"bootstrap.servers":    "host1:9092,host2:9092",
-		"group.id":             "foo",
-		"auto.offset.reset":    "smallest"})
+		"bootstrap.servers": "host1:9092,host2:9092",
+		"group.id":          "foo",
+		"auto.offset.reset": "smallest"})
 
 	if err != nil {
-		fmt.Println("Failed to create a consumer\n",err)
+		fmt.Println("Failed to create a servidor\n", err)
 		os.Exit(0)
 	}
 

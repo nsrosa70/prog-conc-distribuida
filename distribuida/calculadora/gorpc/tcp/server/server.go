@@ -14,10 +14,10 @@ func servidor() {
 	// cria instância da calculadora
 	calculadora := new(calculadora.CalculadoraRPC)
 
-	// cria um novo consumer RPC e registra a calculadora
+	// cria um novo servidor RPC e registra a calculadora
 	server := rpc.NewServer()
 	err := server.RegisterName("Calculator", calculadora)
-	shared.ChecaErro(err, "Não foi possível registrar a Calculadora no consumer...")
+	shared.ChecaErro(err, "Não foi possível registrar a Calculadora no servidor...")
 
 	// cria um listener TCP
 	ln, err := net.Listen("tcp", ":"+strconv.Itoa(shared.CalculatorPort))

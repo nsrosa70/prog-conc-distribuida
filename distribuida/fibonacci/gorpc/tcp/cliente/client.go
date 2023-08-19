@@ -10,13 +10,13 @@ import (
 func Cliente() {
 	var reply int
 
-	// conecta ao consumer (Fibonacci)
+	// conecta ao servidor (Fibonacci)
 	client, err := rpc.Dial("tcp", ":"+strconv.Itoa(shared.FibonacciPort))
-	shared.ChecaErro(err, "Não foi possível criar uma conexão TCP para o consumer Fibonacci...")
+	shared.ChecaErro(err, "Não foi possível criar uma conexão TCP para o servidor Fibonacci...")
 
 	defer func(client *rpc.Client) {
 		var err = client.Close()
-		shared.ChecaErro(err, "Não foi possível fechar a conexão TCP com o consumer Fibonacci...")
+		shared.ChecaErro(err, "Não foi possível fechar a conexão TCP com o servidor Fibonacci...")
 	}(client)
 
 	// invoca operação remota do Fibonacci

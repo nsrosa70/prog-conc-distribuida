@@ -1,4 +1,4 @@
-// socket-server project main.go
+// socket-server project servidor.go
 // developer.com/languages/intro-socket-programming-go/
 package main
 
@@ -28,7 +28,7 @@ func main() {
 	defer server.Close()
 
 	// aguarda conexões
-	fmt.Println("Aguardando conexões dos publisher em " + ServerHost + ":" + ServerPort)
+	fmt.Println("Aguardando conexões dos cliente em " + ServerHost + ":" + ServerPort)
 	for {
 		conn, err := server.Accept()
 		if err != nil {
@@ -37,7 +37,7 @@ func main() {
 		}
 		fmt.Println("Cliente conectado")
 
-		// cria thread para o publisher
+		// cria thread para o cliente
 		go processRequest(conn)
 	}
 }
@@ -51,14 +51,14 @@ func processRequest(conn net.Conn) {
 		// recebe dados
 		err := dec.Decode(&fromClient)
 		if err != nil {
-			fmt.Println("Erro na leitura dos dados do publisher:", err.Error())
+			fmt.Println("Erro na leitura dos dados do cliente:", err.Error())
 		}
 
 		// envia resposta
 		toClient = fibonacci(fromClient)
 		err = enc.Encode(toClient)
 		if err != nil {
-			fmt.Println("Erro no envio dos dados para o publisher:", err.Error())
+			fmt.Println("Erro no envio dos dados para o cliente:", err.Error())
 		}
 
 		if fromClient == EndMessage {
