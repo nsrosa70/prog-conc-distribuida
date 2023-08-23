@@ -1,0 +1,19 @@
+syntax = "proto3";
+option go_package = "github.com/example/path/gen;gen";
+
+package fibonacci;
+
+service Fibonacci {
+  rpc Fibo (RequestFibo) returns (ReplyFibo) {}
+}
+
+// Mensagem de Request
+message RequestFibo {
+  int32 P1 = 2;
+}
+
+//Mensagem de resposta
+message ReplyFibo {
+  int32 N = 1;
+}
+

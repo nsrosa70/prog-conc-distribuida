@@ -1,13 +1,19 @@
 package impl
 
+import (
+	gen "aulas/distribuida/fibonacci/proto"
+	"golang.org/x/net/context"
+)
+
 type FibonacciRPC struct{}
 
-func (t *FibonacciRPC) Fibo(n *int, reply *int) error {
-	*reply = fibonacci(*n)
-	return nil
+func (t *FibonacciRPC) Fibo(ctx context.Context, req *gen.RequestFibo) (*gen.ReplyFibo, error) {
+	reply := &gen.ReplyFibo{}
+	reply.N = fibonacci(req.P1)
+	return reply, nil
 }
 
-func fibonacci(n int) int {
+func fibonacci(n int32) int32 {
 	if n <= 1 {
 		return n
 	}

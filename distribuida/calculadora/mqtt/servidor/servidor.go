@@ -67,5 +67,5 @@ var receiveHandler MQTT.MessageHandler = func(c MQTT.Client, m MQTT.Message) {
 		fmt.Println(token.Error())
 		os.Exit(1)
 	}
-	fmt.Printf("Mensagem recebida: ´%s´ Topico: ´%s´\n", req.Op, m.Topic())
+	fmt.Printf("Recebida: ´%s´ Enviada: ´%s´\n", req, rep)
 }

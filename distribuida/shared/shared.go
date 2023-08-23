@@ -14,10 +14,10 @@ const MQTTRequest = "request"
 const MQTTReply = "reply"
 
 // Other configurations
-const SampleSize = 100000000
+const SampleSize = 5
 const CalculatorPort = 4040
 const FibonacciPort = 3030
-const GRPC_PORT = 5050
+const GrpcPort = 5050
 const NAMING_PORT = 1414
 const MIOP_REQUEST = 1
 const MIOP_REPLY = 2

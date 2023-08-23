@@ -32,6 +32,14 @@ func main() {
 	// desconectar cliente do broker
 	defer client.Disconnect(250)
 
+	// subscrever a um topico & usar um handler para receber as mensagens
+	token = client.Subscribe(shared.MQTTReply, qos, receiveHandler)
+	token.Wait()
+	if token.Error() != nil {
+		fmt.Println(token.Error())
+		os.Exit(1)
+	}
+
 	// loop
 	for i := 0; i < 10; i++ {
 		// cria a mensagem
@@ -51,4 +59,14 @@ func main() {
 		fmt.Printf("Mensagem Publicada: %s\n", msg)
 		time.Sleep(time.Second)
 	}
+}
+
+var receiveHandler MQTT.MessageHandler = func(c MQTT.Client, m MQTT.Message) {
+	rep := shared.Reply{}
+	err := json.Unmarshal(m.Payload(), &rep)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	fmt.Printf("Recebida: ´%f´\n", rep.Result[0])
 }
