@@ -14,7 +14,8 @@ const MQTTRequest = "request"
 const MQTTReply = "reply"
 
 // Other configurations
-const SampleSize = 5
+const StatisticSample = 30
+const SampleSize = 10000
 const CalculatorPort = 4040
 const FibonacciPort = 3030
 const GrpcPort = 5050

@@ -1,70 +1,49 @@
+// rpc_client.go
+
 package main
 
 import (
+	"aulas/distribuida/calculadora/gorpc/impl"
 	"aulas/distribuida/shared"
 	"fmt"
-	"log"
 	"net/rpc"
 	"strconv"
 	"time"
 )
 
-func clientRPCTCPPerformance() {
-	var reply int
-	times := []time.Duration{}
-	var SAMPLE_SIZE = 1000
-
-	// conecta ao servidor
-	client, err := rpc.Dial("tcp", "localhost:1313")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	defer client.Close()
-
-	// loop
-	for i := 0; i < SAMPLE_SIZE; i++ {
-
-		// prepara request & start time
-		t1 := time.Now()
-		args := shared.Args{A: i, B: i}
-
-		// invoca operação remota
-		client.Call("Calculator.Add", args, &reply)
-
-		// stop time
-		times[i] = time.Now().Sub(t1)
-	}
-	totalTime := time.Duration(0)
-	for i := range times {
-		totalTime += times[i]
-	}
-	fmt.Printf("Total Duration: %v [%v]", totalTime, shared.SampleSize)
+func main() {
+	ClientePerf()
 }
 
 func Cliente() {
-	var reply int
+	// 1: Conectar ao servidor RPC - host/porta
+	client, err := rpc.Dial("tcp", ":"+strconv.Itoa(shared.CalculatorPort))
+	shared.ChecaErro(err, "Erro ao conectar ao servidor")
+	defer client.Close()
 
-	// conecta ao servidor (Calculadora)
-	clientCalc, err := rpc.Dial("tcp", ":"+strconv.Itoa(shared.CalculatorPort))
-	shared.ChecaErro(err, "Não foi possível estabelecer uma conexão TCP com o servidor da Calculadora...")
+	// 2: Invocar a operação remota
+	req := impl.Request{P1: 10, P2: 20}
+	rep := impl.Reply{}
+	err = client.Call("Calculadora.Add", req, &rep)
+	shared.ChecaErro(err, "Erro na invocação remota")
 
-	defer func(clientCalc *rpc.Client) {
-		var err = clientCalc.Close()
-		shared.ChecaErro(err, "Não foi possível fechar a conexão TCP com o servidor da Calculadora...")
-	}(clientCalc)
-
-	// invoca operação remota da calculadora
-	args := shared.Args{A: 3, B: 4}
-	err = clientCalc.Call("Calculator.Add", args, &reply)
-	shared.ChecaErro(err, "Erro na invocação da Calculadora remota...")
-
-	fmt.Printf("Add(%v,%v) = %v \n", args.A, args.B, reply)
+	// 3: Imprimir o resultado
+	fmt.Printf("Add(%v,%v) = %v \n", req.P1, req.P2, rep.R)
 }
 
-func main() {
+func ClientePerf() {
+	client, err := rpc.Dial("tcp", ":"+strconv.Itoa(shared.CalculatorPort))
+	shared.ChecaErro(err, "Erro ao conectar ao servidor")
+	defer client.Close()
 
-	go Cliente()
-
-	fmt.Scanln()
+	req := impl.Request{P1: 10, P2: 20}
+	rep := impl.Reply{}
+	for i := 0; i < shared.StatisticSample; i++ {
+		t1 := time.Now()
+		for j := 0; j < shared.SampleSize; j++ {
+			err = client.Call("Calculadora.Add", req, &rep)
+			shared.ChecaErro(err, "Erro na invocação da Calculadora remota...")
+		}
+		fmt.Printf("tcp;%v\n", time.Now().Sub(t1).Milliseconds())
+	}
 }

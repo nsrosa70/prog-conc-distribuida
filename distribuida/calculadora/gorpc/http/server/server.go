@@ -1,7 +1,7 @@
 package main
 
 import (
-	"aulas/distribuida/calculadora/impl"
+	"aulas/distribuida/calculadora/gorpc/impl"
 	"aulas/distribuida/shared"
 	"fmt"
 	"net"
@@ -12,21 +12,21 @@ import (
 
 func main() {
 
-	// cria instância da calculadora
-	calculator := new(impl.CalculadoraRPC)
+	// 1: Criar a instância da calculadora
+	calculator := new(impl.Calculadora)
 
-	// cria um novo servidor RPC e registra a calculadora
+	// 2: Cria um novo servidor RPC e registrar a calculadora
 	server := rpc.NewServer()
-	server.RegisterName("Calculator", calculator)
+	server.RegisterName("Calculadora", calculator)
 
-	// associa um handler HTTP ao servidor
+	// 3: Associar um handler HTTP ao servidor
 	server.HandleHTTP("/", "/debug")
 
-	// // cria um listener TCP
+	// 4: Criar um listener TCP
 	l, err := net.Listen("tcp", ":"+strconv.Itoa(shared.CalculatorPort))
 	shared.ChecaErro(err, "Servidor não inicializado")
 
-	// aguarda por invocações
-	fmt.Println("Servidor pronto (RPC-HTTP) ...\n")
+	// 5: Aceitar e processar requisições remotas
+	fmt.Printf("Servidor RPC pronto (RPC-HTTP) na porta %v...\n", shared.CalculatorPort)
 	http.Serve(l, nil)
 }

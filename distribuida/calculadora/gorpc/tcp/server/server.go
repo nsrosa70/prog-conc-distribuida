@@ -1,7 +1,9 @@
+// rpc_server.go
+
 package main
 
 import (
-	calculadora "aulas/distribuida/calculadora/impl"
+	"aulas/distribuida/calculadora/gorpc/impl"
 	"aulas/distribuida/shared"
 	"fmt"
 	"net"
@@ -9,32 +11,22 @@ import (
 	"strconv"
 )
 
-func servidor() {
-
-	// cria instância da calculadora
-	calculadora := new(calculadora.CalculadoraRPC)
-
-	// cria um novo servidor RPC e registra a calculadora
-	server := rpc.NewServer()
-	err := server.RegisterName("Calculator", calculadora)
-	shared.ChecaErro(err, "Não foi possível registrar a Calculadora no servidor...")
-
-	// cria um listener TCP
-	ln, err := net.Listen("tcp", ":"+strconv.Itoa(shared.CalculatorPort))
-	shared.ChecaErro(err, "Não foi possível criar um listener para a Calculadora...")
-	defer func(ln net.Listener) {
-		var err = ln.Close()
-		shared.ChecaErro(err, "Não foi possível fechar o listener da Calculadora...")
-	}(ln)
-
-	// aguarda por invocações
-	fmt.Println("Servidor está pronto (RPC-TCP)...")
-	server.Accept(ln)
-}
-
 func main() {
+	// 1: Criar instância da calculadora.
+	mathService := new(impl.Calculadora)
 
-	go servidor()
+	// 2: Registrar a instância da calculadora no RPC
+	server := rpc.NewServer()
+	err := server.Register(mathService)
+	shared.ChecaErro(err, "Erro ao registrar a calculadora")
 
-	_, _ = fmt.Scanln()
+	// 3: Criar listener para as conexões remotas
+	listener, err := net.Listen("tcp", ":"+strconv.Itoa(shared.CalculatorPort))
+	shared.ChecaErro(err, "Erro ao iniciar o listener")
+	defer listener.Close()
+
+	fmt.Printf("Servidor RPC pronto (RPC-TCP) na porta %v...\n", shared.CalculatorPort)
+
+	// 4: Aceitar e processar requisições remotas
+	server.Accept(listener)
 }
