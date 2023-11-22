@@ -1,20 +1,20 @@
 package main
 
 import (
-	"distribuida/calculadora/shared"
+	"aulas/distribuida/calculadora/shared"
 	"fmt"
 	"log"
 	"net/rpc"
+	"strconv"
 	"time"
 )
 
 func clientRPCTCPPerformance() {
 	var reply int
-	times := [] time.Duration{}
-	var SAMPLE_SIZE = 1000
+	times := []time.Duration{}
 
 	// conecta ao servidor
-	client, err := rpc.Dial("tcp", "localhost:1313")
+	client, err := rpc.Dial("tcp", ":"+strconv.Itoa(shared.CALCULATOR_PORT))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -22,7 +22,7 @@ func clientRPCTCPPerformance() {
 	defer client.Close()
 
 	// loop
-	for i := 0; i < SAMPLE_SIZE; i++ {
+	for i := 0; i < shared.SAMPLE_SIZE; i++ {
 
 		// prepara request & start time
 		t1 := time.Now()
@@ -69,7 +69,8 @@ func Cliente() {
 
 func main() {
 
-	go Cliente()
+	//Cliente()
+	clientRPCTCPPerformance()
 
 	fmt.Scanln()
 }

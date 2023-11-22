@@ -1,8 +1,8 @@
 package impl
 
 import (
+	"aulas/distribuida/calculadora/grpc/fibonacci"
 	"context"
-	"distribuida/calculadora/grpc/fibonacci"
 )
 
 type Fibonacci struct{}

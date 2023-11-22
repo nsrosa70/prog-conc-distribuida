@@ -1,7 +1,7 @@
 package impl
 
 import (
-	"distribuida/calculadora/shared"
+	"aulas/distribuida/calculadora/shared"
 	"errors"
 )
 
@@ -27,4 +27,3 @@ func (t *CalculadoraRPC) Div(args *shared.Args, quo *shared.Quotient) error {
 	quo.Rem = args.A % args.B
 	return nil
 }
-
