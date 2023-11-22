@@ -1,29 +1,30 @@
 package impl
 
 import (
-	"aulas/distribuida/calculadora/shared"
-	"errors"
+	gen "aulas/distribuida/calculadora/grpc/proto"
+	"golang.org/x/net/context"
 )
 
-type CalculadoraRPC struct{}
+type CalculadoraRPC struct {
+}
 
-func (t *CalculadoraRPC) Mul(args *shared.Args, reply *int) error {
-	*reply = args.A * args.B
-	return nil
+func (t *CalculadoraRPC) Add(ctx context.Context, request *gen.Request) (*gen.Reply, error) {
+	reply := &gen.Reply{}
+	reply.N = request.P1 + request.P2
+	return reply, nil
 }
-func (t *CalculadoraRPC) Sub(args *shared.Args, reply *int) error {
-	*reply = args.A - args.B
-	return nil
+func (t *CalculadoraRPC) Sub(ctx context.Context, request *gen.Request) (*gen.Reply, error) {
+	reply := &gen.Reply{}
+	reply.N = request.P1 - request.P2
+	return reply, nil
 }
-func (t *CalculadoraRPC) Add(args *shared.Args, reply *int) error {
-	*reply = args.A + args.B
-	return nil
+func (t *CalculadoraRPC) Mul(ctx context.Context, request *gen.Request) (*gen.Reply, error) {
+	reply := &gen.Reply{}
+	reply.N = request.P1 * request.P2
+	return reply, nil
 }
-func (t *CalculadoraRPC) Div(args *shared.Args, quo *shared.Quotient) error {
-	if args.B == 0 {
-		return errors.New("Divide by zero")
-	}
-	quo.Quo = args.A / args.B
-	quo.Rem = args.A % args.B
-	return nil
+func (t *CalculadoraRPC) Div(ctx context.Context, request *gen.Request) (*gen.Reply, error) {
+	reply := &gen.Reply{}
+	reply.N = request.P1 / request.P2
+	return reply, nil
 }

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"distribuida/calculadora/shared"
+	"aulas/distribuida/shared"
 	"encoding/json"
 	"fmt"
 	"net"
@@ -14,7 +14,7 @@ func CalculatorClientTCP() {
 	port := "1313"
 
 	// return an address of a TCP end point
-	r,err := net.ResolveTCPAddr("tcp","localhost:"+port)
+	r, err := net.ResolveTCPAddr("tcp", "localhost:"+port)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(0)
@@ -40,29 +40,29 @@ func CalculatorClientTCP() {
 	jsonEncoder := json.NewEncoder(conn)
 
 	/*
-	// warm-up
-	for i := 0; i < 1000; i++ { //N = 1000, 10000, 1000000
+		// warm-up
+		for i := 0; i < 1000; i++ { //N = 1000, 10000, 1000000
 
-		// Prepare request
-		msgToServer := shared.Request{"add", 3, 1}
+			// Prepare request
+			msgToServer := shared.Request{"add", 3, 1}
 
-		// Serialise and send request to servidor
-		err = jsonEncoder.Encode(msgToServer)
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(0)
+			// Serialise and send request to servidor
+			err = jsonEncoder.Encode(msgToServer)
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(0)
+			}
+
+			// Receive response from server
+			err = jsonDecoder.Decode(&response)
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(0)
+			}
+
+			//fmt.Printf("%s(%d,%d) = %.0f \n",msgToServer.Op,msgToServer.P1,msgToServer.P2,response.Result[0].(float64))
 		}
-
-		// Receive response from server
-		err = jsonDecoder.Decode(&response)
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(0)
-		}
-
-		//fmt.Printf("%s(%d,%d) = %.0f \n",msgToServer.Op,msgToServer.P1,msgToServer.P2,response.Result[0].(float64))
-	}
-*/
+	*/
 	// Measurement
 
 	//var t2 time.Duration
@@ -94,7 +94,7 @@ func CalculatorClientTCP() {
 
 		//t2 = t2 + time.Now().Sub(t1)
 
-		fmt.Printf("%s(%d,%d) = %.0f \n",msgToServer.Op,msgToServer.P1,msgToServer.P2,response.Result[0].(float64))
+		fmt.Printf("%s(%d,%d) = %.0f \n", msgToServer.Op, msgToServer.P1, msgToServer.P2, response.Result[0].(float64))
 	}
 
 	//fmt.Println(t2/shared.SAMPLE_SIZE)
@@ -106,4 +106,3 @@ func main() {
 
 	_, _ = fmt.Scanln()
 }
-

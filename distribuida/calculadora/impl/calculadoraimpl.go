@@ -1,9 +1,12 @@
 package impl
 
-type CalculadoraGoRPC struct{}
+import (
+	"aulas/distribuida/shared"
+)
 
-/*
-func (CalculadoraGoRPC) InvocaCalculadora(req shared.Request) int {
+type Calculadora struct{}
+
+func (Calculadora) InvocaCalculadora(req shared.Request) int {
 	var r int
 
 	op := req.Op
@@ -12,30 +15,29 @@ func (CalculadoraGoRPC) InvocaCalculadora(req shared.Request) int {
 
 	switch op {
 	case "add":
-		r = CalculadoraGoRPC{}.Add(p1, p2)
+		r = Calculadora{}.Add(p1, p2)
 	case "sub":
-		r = CalculadoraGoRPC{}.Sub(p1, p2)
+		r = Calculadora{}.Sub(p1, p2)
 	case "mul":
-		r = CalculadoraGoRPC{}.Mul(p1, p2)
+		r = Calculadora{}.Mul(p1, p2)
 	case "div":
-		r = CalculadoraGoRPC{}.Div(p1, p2)
+		r = Calculadora{}.Div(p1, p2)
 	}
 	return r
 }
-*/
 
-func (CalculadoraGoRPC) Add(x int, y int) int {
+func (Calculadora) Add(x int, y int) int {
 	return x + y
 }
 
-func (CalculadoraGoRPC) Sub(x int, y int) int {
+func (Calculadora) Sub(x int, y int) int {
 	return x - y
 }
 
-func (CalculadoraGoRPC) Mul(x int, y int) int {
+func (Calculadora) Mul(x int, y int) int {
 	return x * y
 }
 
-func (CalculadoraGoRPC) Div(x int, y int) int {
+func (Calculadora) Div(x int, y int) int {
 	return x / y
 }

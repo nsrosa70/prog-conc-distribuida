@@ -1,10 +1,12 @@
+// Para Quickstart do gRPC, acesse https://grpc.io/docs/languages/go/quickstart/
 package main
 
 import (
-	"distribuida/calculadora/grpc/calculadora"
-	"distribuida/calculadora/grpc/fibonacci"
-	"distribuida/calculadora/impl"
-	"distribuida/calculadora/shared"
+	gen1 "aulas/distribuida/calculadora/grpc/proto"
+	calculadora "aulas/distribuida/calculadora/impl"
+	fibonacci "aulas/distribuida/fibonacci/impl"
+	gen2 "aulas/distribuida/fibonacci/proto"
+	"aulas/distribuida/shared"
 	"fmt"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -14,21 +16,22 @@ import (
 
 func main() {
 
-	conn, err := net.Listen("tcp", ":"+strconv.Itoa(shared.GRPC_PORT))
-	shared.ChecaErro(err,"Não foi possível criar o listener")
+	// Cria listener
+	endPoint := "localhost:" + strconv.Itoa(shared.GrpcPort)
+	conn, err := net.Listen("tcp", endPoint)
+	shared.ChecaErro(err, "Não foi possível criar o listener")
 
+	// Cria um gRPC Server (“serviço de nomes” + servidor)”
 	server := grpc.NewServer()
 
-	calculadora.RegisterCalculadoraServer(server,&impl.CalculadoraGRPC{})
-	fibonacci.RegisterFibonacciServer(server,&impl.Fibonacci{})
-
+	// Registra a “Calculadora"/"Fibonacci" no servidor de nomes
+	gen1.RegisterCalculadoraServer(server, &calculadora.CalculadoraRPC{})
+	gen2.RegisterFibonacciServer(server, &fibonacci.FibonacciRPC{})
 	reflection.Register(server)
 
 	fmt.Println("Servidor pronto ...")
 
+	// Inicia servidor para atender requisções
 	err = server.Serve(conn)
-	shared.ChecaErro(err,"Falha ao iniciar servidor")
+	shared.ChecaErro(err, "Falha ao iniciar servidor")
 }
-
-
-

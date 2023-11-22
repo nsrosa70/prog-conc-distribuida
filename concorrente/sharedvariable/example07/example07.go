@@ -25,6 +25,6 @@ func main() {
 	fmt.Println("Cores Virtuais           :", cores_virtuais)
 	fmt.Println("CPUs lógicas             :", cpus_logicas)
 	fmt.Println("Hardware threads por Core:", hardware_threads_por_core_fisico) //
-	fmt.Println("Threads do SO (default)  :", default_go_max_procs)
+	fmt.Println("Threads do SO (direct)  :", default_go_max_procs)
 	fmt.Println("Threads do SO (desejados):", go_max_procs)
 }

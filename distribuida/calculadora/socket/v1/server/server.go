@@ -1,8 +1,8 @@
 package main
 
 import (
-	"distribuida/calculadora/impl"
-	"distribuida/calculadora/shared"
+	"aulas/distribuida/calculadora/impl"
+	"aulas/distribuida/shared"
 	"encoding/json"
 	"fmt"
 	"net"
@@ -93,7 +93,7 @@ func CalculatorServerUDP() {
 	msgFromClient := make([]byte, 1024)
 
 	// resolve server address
-	addr, err := net.ResolveUDPAddr("udp", ":"+strconv.Itoa(shared.CALCULATOR_PORT))
+	addr, err := net.ResolveUDPAddr("udp", ":"+strconv.Itoa(shared.CalculatorPort))
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(0)
@@ -114,7 +114,7 @@ func CalculatorServerUDP() {
 		}
 	}(conn)
 
-	fmt.Println("Server UDP is ready to accept requests at port", shared.CALCULATOR_PORT, "...")
+	fmt.Println("Server UDP is ready to accept requests at port", shared.CalculatorPort, "...")
 
 	for {
 		// receive request

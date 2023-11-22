@@ -1,7 +1,7 @@
 package main
 
 import (
-	"distribuida/calculadora/shared"
+	"aulas/distribuida/shared"
 	"encoding/json"
 	"fmt"
 	"net"
@@ -24,7 +24,7 @@ func CalculatorClientTCP(n int) {
 	var response shared.Reply
 
 	// retorna o endereço do endpoint
-	r,err := net.ResolveTCPAddr("tcp","localhost:1314")
+	r, err := net.ResolveTCPAddr("tcp", "localhost:1314")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(0)
@@ -76,7 +76,7 @@ func CalculatorClientUDP(n int) {
 	var response shared.Reply
 
 	// resolve server address
-	addr, err := net.ResolveUDPAddr("udp", "localhost:"+strconv.Itoa(shared.CALCULATOR_PORT))
+	addr, err := net.ResolveUDPAddr("udp", "localhost:"+strconv.Itoa(shared.CalculatorPort))
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(0)
@@ -100,9 +100,9 @@ func CalculatorClientUDP(n int) {
 		}
 	}(conn)
 
-	for i := 0; i < shared.SAMPLE_SIZE; i++ {
+	for i := 0; i < shared.SampleSize; i++ {
 		// Create request
-		request := shared.Request{Op: "add", P1: n, P2:n}
+		request := shared.Request{Op: "add", P1: n, P2: n}
 
 		// Serialise and send request
 		err = encoder.Encode(request)

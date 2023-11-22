@@ -13,7 +13,7 @@ import (
 const NumeroDeProdutores = 100
 const NumeroDeConsumidores = 100
 const TamanhoDaAmostra = 100
-const CapacidadeDoBuffer = 1 // 1, 100, 1.000
+const CapacidadeDoBuffer = 1000 // 1, 100, 1.000
 const NumeroDeItens = 10000
 
 var EB eventbuffer.IEventBuffer

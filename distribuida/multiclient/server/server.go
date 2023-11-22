@@ -1,4 +1,4 @@
-// socket-server project main.go
+// socket-server project servidor.go
 // developer.com/languages/intro-socket-programming-go/
 package main
 
@@ -52,10 +52,10 @@ func processRequestBytes(conn net.Conn) {
 		if err != nil {
 			fmt.Println("Erro na leitura dos dados do cliente:", err.Error())
 		}
-		fmt.Println("Dado recebido: ", string(fromClient[:mLen]))
+		//fmt.Println("Dado recebido: ", string(fromClient[:mLen]))
 
 		// envia resposta
-		_, err = conn.Write([]byte("Mensagem recebida com sucesso:" + string(fromClient[:mLen])))
+		_, err = conn.Write([]byte(string(fromClient[:mLen])))
 
 		if string(fromClient[:mLen]) == EndMessage {
 			break
@@ -80,7 +80,7 @@ func processRequestJson(conn net.Conn) {
 		fmt.Println("Dado recebido: ", fromClient)
 
 		// envia resposta
-		err = enc.Encode("Mensagem recebida com sucesso:" + fromClient)
+		err = enc.Encode(fromClient)
 		if err != nil {
 			fmt.Println("Erro no envio dos dados para o cliente:", err.Error())
 		}
