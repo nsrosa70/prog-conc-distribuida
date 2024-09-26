@@ -9,7 +9,7 @@ func main() {
 
 	fmt.Println("Naming servidor running!!")
 
-	// control loop passed to invoker
+	// control loop passed to invokers
 	namingInvoker := invoker.NamingInvoker{}
 	namingInvoker.Invoke()
 }

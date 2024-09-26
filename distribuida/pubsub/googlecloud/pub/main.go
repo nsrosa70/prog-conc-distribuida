@@ -23,7 +23,7 @@ func main() {
 	// publica mensagem
 	topic := client.Topic(topicID)
 	res := topic.Publish(ctx, &pubsub.Message{
-		Data: []byte("hello world"),
+		Data: []byte("calculadora world"),
 	})
 
 	if res == nil {

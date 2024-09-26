@@ -4,7 +4,7 @@ import (
 	"encoding/gob"
 	"encoding/json"
 	"log"
-	"mymiddleware/distribution/miop"
+	"test/mymiddleware/distribution/miop"
 )
 
 type Marshaller struct{}

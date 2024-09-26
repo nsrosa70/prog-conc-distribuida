@@ -7,7 +7,6 @@ import (
 	"net"
 	"os"
 	"strconv"
-	"strings"
 )
 
 type SRH struct {
@@ -18,7 +17,7 @@ type SRH struct {
 
 var ln net.Listener
 
-//var conn net.Conn
+// var conn net.Conn
 var err error
 
 func NewSRH(h string, p int) *SRH {
@@ -33,72 +32,84 @@ func NewSRH(h string, p int) *SRH {
 
 func (srh *SRH) Receive() []byte {
 
+	// 1: create listener & accept connection
 	if srh.Connection == nil {
-		// 1: create listener
 		ln, err = net.Listen("tcp", srh.Host+":"+strconv.Itoa(srh.Port))
 		if err != nil {
-			log.Fatalf("HERE 1:: SRH:: %s", err)
+			log.Fatalf("SRH:: %s", err)
 		}
 
-		// 2: accept connection
 		srh.Connection, err = ln.Accept()
 		if err != nil {
-			log.Fatalf("HERE 2:: SRH:: %s", err)
+			log.Fatalf("SRH:: %s", err)
 		}
 	}
 
-	// 3: receive message's size
+	// 2: receive message's size
 	size := make([]byte, 4)
 	_, err = srh.Connection.Read(size)
 	if err != nil {
-		ne, _ := err.(net.Error)
-		if strings.Contains(ne.Error(), "wsarecv") {
-			return []byte{}
+		if _, ok := err.(*net.OpError); ok {
+			srh.Connection.Close()
+			return nil
 		} else {
 			log.Fatalf("SRH:: %s", err)
 		}
 	}
 	sizeInt := binary.LittleEndian.Uint32(size)
 
-	// 4: receive message
+	// 3: receive message
 	msg := make([]byte, sizeInt)
 	_, err = srh.Connection.Read(msg)
-	ne, _ := err.(net.Error)
-	if strings.Contains(ne.Error(), "wsarecv") {
-		return []byte{}
-	} else {
-		log.Fatalf("SRH:: %s", err)
+	if err != nil {
+		if _, ok := err.(*net.OpError); ok {
+			srh.Connection.Close()
+			return nil
+		} else {
+			log.Fatalf("SRH:: %s", err)
+		}
 	}
+
 	return msg
 }
 
 func (srh *SRH) Send(msgToClient []byte) {
 
+	// 1. Check availability of connection
 	if srh.Connection == nil {
 		fmt.Println("SRH:: Connection not opened")
 		os.Exit(0)
 	}
 
-	// 1: send message's size
+	// 2: send message's size
 	size := make([]byte, 4)
 	l := uint32(len(msgToClient))
 	binary.LittleEndian.PutUint32(size, l)
 	_, err = srh.Connection.Write(size)
 	if err != nil {
-		log.Fatalf("SRH:: %s", err)
+		if _, ok := err.(*net.OpError); ok {
+			srh.Connection.Close()
+			return
+		} else {
+			log.Fatalf("SRH:: %s", err)
+		}
 	}
 
-	// 2: send message
+	// 3: send message
 	_, err = srh.Connection.Write(msgToClient)
 	if err != nil {
-		log.Fatalf("SRH:: %s", err)
+		if _, ok := err.(*net.OpError); ok {
+			srh.Connection.Close()
+			ln.Close()
+			return
+		} else {
+			log.Fatalf("SRH:: %s", err)
+		}
 	}
 
-	// 3: close connection
-	//srh.Connection.Close()
-	//ln.Close()
-}
+	// 4: close connection
+	srh.Connection.Close()
+	srh.Connection = nil
 
-func handler(c net.Conn) {
-
+	ln.Close()
 }

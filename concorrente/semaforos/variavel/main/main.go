@@ -11,15 +11,15 @@ var n int
 var s impl.Semaphore
 var ws sync.WaitGroup
 
-func increment(){
+func increment() {
 	defer ws.Done()
 
 	s.P()
-    n = n + 1
-    s.V()
+	n = n + 1
+	s.V()
 }
 
-func decrement(){
+func decrement() {
 	defer ws.Done()
 
 	s.P()
@@ -27,10 +27,10 @@ func decrement(){
 	s.V()
 }
 
-func main(){
+func main() {
 	s = *impl.NewSemaphore(1)
 
-	for i := 0; i < 100; i ++ {
+	for i := 0; i < 100; i++ {
 		ws.Add(1)
 		go increment()
 
@@ -42,4 +42,3 @@ func main(){
 
 	fmt.Println(n)
 }
-

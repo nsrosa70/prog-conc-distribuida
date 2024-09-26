@@ -22,7 +22,7 @@ func main() {
 	wg := sync.WaitGroup{}
 
 	for idx := 0; idx < TamanhoDaAmostra; idx++ {
-		EB = shared.NewEventBuffer("Channel", CapacidadeDoBuffer, NumeroDeProdutores*NumeroDeItens) // tipo de primitiva
+		EB = shared.NewEventBuffer("Cond", CapacidadeDoBuffer, NumeroDeProdutores*NumeroDeItens) // tipo de primitiva
 		t1 := time.Now()
 		for i := 0; i < NumeroDeConsumidores; i++ { // inicia os consumidores
 			wg.Add(1)

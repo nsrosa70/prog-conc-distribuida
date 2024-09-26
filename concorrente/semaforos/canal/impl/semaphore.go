@@ -22,4 +22,3 @@ func (s Semaphore) P() { // Decrement / Wait
 func (s Semaphore) V() { // Increment Signal
 	s <- struct{}{}
 }
-

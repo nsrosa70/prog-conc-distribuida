@@ -7,6 +7,8 @@ import (
 	"strconv"
 )
 
+const MaxConnectionAttempts = 10
+
 // MQTT
 const MQTTHost = "mqtt://localhost:1883"
 const MQTTTopic = "PubSub"
@@ -35,22 +37,9 @@ const RoutingKey = "routing_key"
 type Message struct {
 	Payload string
 }
-type Request struct {
-	Op string
-	P1 int
-	P2 int
-}
-
-type Reply struct {
-	Result []interface{}
-}
 
 type Args struct {
 	A, B int
-}
-
-type Quotient struct {
-	Quo, Rem int
 }
 
 func ChecaErro(err error, msg string) {
@@ -91,4 +80,29 @@ func RandomString(l int) string {
 
 func RandInt(min int, max int) int {
 	return min + rand.Intn(max-min)
+}
+
+type Invocation struct {
+	Ior     IOR
+	Request Request
+}
+
+type Termination struct {
+	Rep Reply
+}
+
+type IOR struct {
+	Host     string
+	Port     int
+	Id       int
+	TypeName string
+}
+
+type Request struct {
+	Op     string
+	Params []interface{}
+}
+
+type Reply struct {
+	Result []interface{}
 }

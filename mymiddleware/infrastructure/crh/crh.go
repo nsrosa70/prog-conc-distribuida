@@ -5,6 +5,8 @@ import (
 	"log"
 	"net"
 	"strconv"
+	"test/shared"
+	"time"
 )
 
 type CRH struct {
@@ -25,16 +27,23 @@ func NewCRH(h string, p int) *CRH {
 func (crh *CRH) SendReceive(msgToServer []byte) []byte {
 	var err error
 
+	// 1: connect to servidor
+	h := 20 // time between attempts
 	if crh.Connection == nil {
-		// 1: connect to servidor
-		for {
+		for i := 0; i <= shared.MaxConnectionAttempts; i++ {
 			crh.Connection, err = net.Dial("tcp", crh.Host+":"+strconv.Itoa(crh.Port))
 			if err == nil {
 				break
+			} else {
+				time.Sleep(time.Duration(h) * time.Millisecond)
+				h *= 2
+			}
+			if i == shared.MaxConnectionAttempts {
+				log.Fatal("Number of connection attempts to server exceeded...")
 			}
 		}
-		//defer crh.Connection.Close()
 	}
+
 	// 2: send message's size
 	sizeMsgToServer := make([]byte, 4)
 	l := uint32(len(msgToServer))
@@ -64,5 +73,9 @@ func (crh *CRH) SendReceive(msgToServer []byte) []byte {
 	if err != nil {
 		log.Fatalf("SRH:: %s", err)
 	}
+
+	crh.Connection.Close()
+	crh.Connection = nil
+
 	return msgFromServer
 }

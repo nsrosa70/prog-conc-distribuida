@@ -1,35 +1,33 @@
 package requestor
 
 import (
-	"mymiddleware/aux"
-	"mymiddleware/distribution/marshaller"
-	"mymiddleware/distribution/miop"
-	"mymiddleware/infrastructure/crh"
-	"shared"
+	"test/mymiddleware/distribution/marshaller"
+	"test/mymiddleware/distribution/miop"
+	"test/mymiddleware/infrastructure/crh"
+	"test/shared"
 )
 
-type Requestor struct{}
+type Requestor struct {
+	Inv shared.Invocation
+}
 
-func (Requestor) Invoke(inv aux.Invocation) interface{} {
-	marshallerInst := marshaller.Marshaller{}
-	crhInst := crh.CRH{ServerHost: inv.Host, ServerPort: inv.Port}
+func (Requestor) Invoke(i shared.Invocation) shared.Termination {
+	// 1. Create MIOP packet
+	miopReqPacket := miop.CreateRequestMIOP(i.Request.Op, i.Request.Params)
 
-	// create request packet
-	reqHeader := miop.RequestHeader{Context: "Context", RequestId: 1000, ResponseExpected: true, ObjectKey: 2000, Operation: inv.Request.Op}
-	reqBody := miop.RequestBody{Body: inv.Request.Params}
-	header := miop.Header{Magic: "MIOP", Version: "1.0", ByteOrder: true, MessageType: shared.MIOP_REQUEST}
-	body := miop.Body{ReqHeader: reqHeader, ReqBody: reqBody}
-	miopPacketRequest := miop.Packet{Hdr: header, Bd: body}
+	// 2. Serialise MIOP packet
+	m := marshaller.Marshaller{}
+	b := m.Marshall(miopReqPacket)
 
-	// serialise request packet
-	msgToClientBytes := marshallerInst.Marshall(miopPacketRequest)
+	// 3. Create & invoke CRH
+	c := crh.NewCRH(i.Ior.Host, i.Ior.Port)
+	r := c.SendReceive(b)
 
-	// send request packet and receive reply packet
-	msgFromServerBytes := crhInst.SendReceive(msgToClientBytes)
-	miopPacketReply := marshallerInst.Unmarshall(msgFromServerBytes)
+	// 4. Extract reply from server
+	miopRepPacket := m.Unmarshall(r)
+	rt := miop.ExtractReply(miopRepPacket)
 
-	// extract result from reply packet
-	r := miopPacketReply.Bd.RepBody.OperationResult
+	t := shared.Termination{Rep: rt}
 
-	return r
+	return t
 }

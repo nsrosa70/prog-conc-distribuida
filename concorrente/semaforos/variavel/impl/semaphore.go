@@ -38,4 +38,3 @@ func (s *Semaphore) V() {
 	s.c.L.Unlock()
 	s.c.Signal()
 }
-
