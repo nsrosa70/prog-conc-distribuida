@@ -1,4 +1,4 @@
-package fibonacci
+package fibonacciproxy
 
 import (
 	"test/mymiddleware/distribution/requestor"
@@ -9,9 +9,10 @@ type FibonacciProxy struct {
 	Ior shared.IOR
 }
 
-func (p *FibonacciProxy) New(i shared.IOR) FibonacciProxy {
-	p.Ior = i
-	return *p
+func New(h string, p int) FibonacciProxy {
+	i := shared.IOR{Host: h, Port: p}
+	r := FibonacciProxy{Ior: i}
+	return r
 }
 
 func (p *FibonacciProxy) Fibo(_p1 int) int {

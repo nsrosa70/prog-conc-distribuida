@@ -67,7 +67,7 @@ func (h *NamingProxy) List() []shared.IOR {
 
 	// 1. Configure input parameters
 	params := make([]interface{}, 1)
-	params[0] = "" // TODO only to have something as parameters, i.e., parameters not used
+	params[0] = "" // no parameters
 
 	// Configure remote request
 	req := shared.Request{Op: "List", Params: params}

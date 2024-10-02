@@ -1,21 +1,21 @@
 package main
 
 import (
-	"fmt"
 	"test/mymiddleware/distribution/invokers/calculadora"
-	"test/mymiddleware/distribution/invokers/fibonacci"
+	namingproxy "test/mymiddleware/services/naming/proxy"
+	"test/shared"
 )
 
 func main() {
-	// Start calculadora invoker
-	calc := calculadora.Invoker{}
+	// Obtain proxies
+	naming := namingproxy.New(shared.LocalHost, shared.NamingPort)
 
-	// Start fibonacci invoker
-	fibo := fibonacci.Invoker{}
+	// Create instance of invokers
+	calcInv := calculadorainvoker.New(shared.LocalHost, shared.CalculadoraPort)
 
-	go calc.Invoke("localhost", 1313)
-	go fibo.Invoke("localhost", 1314)
+	// Register services in Naming
+	naming.Bind("Calculadora", shared.NewIOR(calcInv.Ior.Host, calcInv.Ior.Port))
 
-	fmt.Println("Servidor pronto...")
-	fmt.Scanln()
+	// Invoke services
+	calcInv.Invoke()
 }

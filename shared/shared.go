@@ -19,7 +19,6 @@ const MQTTReply = "reply"
 const StatisticSample = 30
 const SampleSize = 10000
 const CalculatorPort = 4040
-const FibonacciPort = 3030
 const GrpcPort = 5050
 const NAMING_PORT = 1414
 const MIOP_REQUEST = 1
@@ -36,6 +35,7 @@ const RoutingKey = "routing_key"
 
 const NamingPort = 1313
 const CalculadoraPort = 1314
+const FibonacciPort = 1315
 const LocalHost = "localhost"
 
 type Message struct {

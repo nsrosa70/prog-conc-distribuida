@@ -1,4 +1,4 @@
-package fibonacci
+package fibonacciinvoker
 
 import (
 	"log"
@@ -6,12 +6,21 @@ import (
 	"test/mymiddleware/distribution/marshaller"
 	"test/mymiddleware/distribution/miop"
 	"test/mymiddleware/infrastructure/srh"
+	"test/shared"
 )
 
-type Invoker struct{}
+type FibonacciInvoker struct {
+	Ior shared.IOR
+}
 
-func (Invoker) Invoke(h string, p int) {
-	s := srh.NewSRH(h, p)
+func New(h string, p int) FibonacciInvoker {
+	ior := shared.IOR{Host: h, Port: p}
+	inv := FibonacciInvoker{Ior: ior}
+
+	return inv
+}
+func (i FibonacciInvoker) Invoke() {
+	s := srh.NewSRH(i.Ior.Host, i.Ior.Port)
 	m := marshaller.Marshaller{}
 	c := fibonacci.Fibonacci{}
 	miopPacket := miop.Packet{}

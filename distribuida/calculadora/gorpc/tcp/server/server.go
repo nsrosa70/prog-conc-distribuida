@@ -3,12 +3,12 @@
 package main
 
 import (
-	"aulas/distribuida/calculadora/gorpc/impl"
-	"aulas/distribuida/shared"
 	"fmt"
 	"net"
 	"net/rpc"
 	"strconv"
+	"test/distribuida/calculadora/gorpc/impl"
+	"test/shared"
 )
 
 func main() {

@@ -3,11 +3,11 @@
 package main
 
 import (
-	"aulas/distribuida/calculadora/gorpc/impl"
-	"aulas/distribuida/shared"
 	"fmt"
 	"net/rpc"
 	"strconv"
+	"test/distribuida/calculadora/gorpc/impl"
+	"test/shared"
 	"time"
 )
 
@@ -17,7 +17,7 @@ func main() {
 
 func Cliente() {
 	// 1: Conectar ao servidor RPC - host/porta
-	client, err := rpc.Dial("tcp", ":"+strconv.Itoa(shared.CalculatorPort))
+	client, err := rpc.Dial("tcp", ":"+strconv.Itoa(shared.CalculadoraPort))
 	shared.ChecaErro(err, "Erro ao conectar ao servidor")
 	defer client.Close()
 

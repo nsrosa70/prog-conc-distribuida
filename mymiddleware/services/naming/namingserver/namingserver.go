@@ -7,18 +7,17 @@ import (
 	naminginvoker "test/mymiddleware/services/naming/invoker"
 	namingproxy "test/mymiddleware/services/naming/proxy"
 	"test/shared"
-	"time"
 )
 
 func main() {
 
 	go namingServer()
-	time.Sleep(100 * time.Millisecond)
-	go calcServer()
-	time.Sleep(100 * time.Millisecond)
-	go calcClient()
+	//	time.Sleep(100 * time.Millisecond)
+	//	go calcServer()
+	//	time.Sleep(100 * time.Millisecond)
+	//	go calcClient()
 
-	fmt.Println("Servidor de Nomes em execução...")
+	fmt.Println("'Servidor de Nomes' em execução...")
 	fmt.Scanln()
 }
 
