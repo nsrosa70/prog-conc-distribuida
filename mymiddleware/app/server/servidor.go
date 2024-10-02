@@ -2,24 +2,20 @@ package main
 
 import (
 	"fmt"
-	"test/mymiddleware/distribution/invokers/calculadora/calculadorainvoker"
+	"test/mymiddleware/distribution/invokers/calculadora"
+	"test/mymiddleware/distribution/invokers/fibonacci"
 )
 
 func main() {
-	// start calculadora invoker
-	invoker := calculadorainvoker.Invoker{}
+	// Start calculadora invoker
+	calc := calculadora.Invoker{}
 
-	invoker.Invoke("localhost", 1313)
-}
+	// Start fibonacci invoker
+	fibo := fibonacci.Invoker{}
 
-func process(b []byte) []byte {
+	go calc.Invoke("localhost", 1313)
+	go fibo.Invoke("localhost", 1314)
 
-	fmt.Println(b)
-
-	r := []byte{}
-	for i := 0; i < len(b); i++ {
-		r = append(r, b[len(b)-i])
-	}
-
-	return r
+	fmt.Println("Servidor pronto...")
+	fmt.Scanln()
 }

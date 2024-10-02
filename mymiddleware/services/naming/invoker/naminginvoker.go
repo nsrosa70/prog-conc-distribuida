@@ -1,62 +1,71 @@
-package invoker
+package naminginvoker
 
 import (
-	"mymiddleware/distribution/clientproxy"
-	"mymiddleware/distribution/marshaller"
-	"mymiddleware/distribution/miop"
-	"mymiddleware/infrastructure/srh"
-	"mymiddleware/services/naming"
-	"shared"
+	"log"
+	"test/mymiddleware/distribution/marshaller"
+	"test/mymiddleware/distribution/miop"
+	"test/mymiddleware/infrastructure/srh"
+	"test/mymiddleware/services/naming"
+	"test/shared"
 )
 
-type NamingInvoker struct{}
+type Invoker struct {
+	Ior shared.IOR
+}
 
-func (NamingInvoker) Invoke() {
-	srhImpl := srh.SRH{ServerHost: "localhost", ServerPort: shared.NAMING_PORT}
-	marshallerImpl := marshaller.Marshaller{}
-	namingImpl := naming.NamingService{}
-	miopPacketReply := miop.Packet{}
-	replyParams := make([]interface{}, 1)
+func New(h string, p int) Invoker {
+	i := shared.IOR{Host: h, Port: p}
+	r := Invoker{Ior: i}
+	return r
+}
 
-	// control loop
+func (i Invoker) Invoke() {
+	s := srh.NewSRH(i.Ior.Host, i.Ior.Port)
+	m := marshaller.Marshaller{}
+	miopPacket := miop.Packet{}
+	var rep interface{}
+
+	// Create an instance of Calculadora
+	n := naming.NamingService{}
+
 	for {
-		// receive request packet
-		rcvMsgBytes := srhImpl.Receive()
+		// Invoke SRH
+		b := s.Receive()
 
-		// unmarshall request packet
-		miopPacketRequest := marshallerImpl.Unmarshall(rcvMsgBytes)
+		// Unmarshall miop packet
+		miopPacket = m.Unmarshall(b)
 
-		// extract operation name
-		operation := miopPacketRequest.Bd.ReqHeader.Operation
+		// Extract request from client
+		r := miop.ExtractRequest(miopPacket)
 
-		// demux request
-		switch operation {
-		case "Register":
-			_p1 := miopPacketRequest.Bd.ReqBody.Body[0].(string)
-			_map := miopPacketRequest.Bd.ReqBody.Body[1].(map[string]interface{})
-			_proxyTemp := _map["Proxy"].(map[string]interface{})
-			_p2 := clientproxy.ClientProxy{TypeName: _proxyTemp["TypeName"].(string), Host: _proxyTemp["Host"].(string), Port: int(_proxyTemp["Port"].(float64)), Id: int(_proxyTemp["Id"].(float64))}
-
-			// dispatch request
-			replyParams[0] = namingImpl.Register(_p1, _p2)
-		case "Lookup":
-			_p1 := miopPacketRequest.Bd.ReqBody.Body[0].(string)
-
-			// dispatch request
-			replyParams[0] = namingImpl.Lookup(_p1)
+		// Demultiplex request
+		switch r.Op {
+		case "Find":
+			_p1 := r.Params[0].(string)
+			rep = n.Find(_p1)
+		case "Bind":
+			_p1 := r.Params[0].(string)
+			_p22 := r.Params[1].(map[string]interface{})
+			_ior := shared.IOR{Host: _p22["Host"].(string), Port: int(_p22["Port"].(float64)), Id: int(_p22["Id"].(float64)), TypeName: _p22["TypeName"].(string)}
+			_p2 := _ior
+			rep = n.Bind(_p1, _p2)
+		case "List":
+			rep = n.List()
+		default:
+			log.Fatal("Invoker:: Operation '" + r.Op + "' is unknown:: ")
 		}
 
-		// assembly reply packet
-		repHeader := miop.ReplyHeader{Context: "", RequestId: miopPacketRequest.Bd.ReqHeader.RequestId, Status: 1}
-		repBody := miop.ReplyBody{OperationResult: replyParams}
-		header := miop.Header{Magic: "MIOP", Version: "1.0", ByteOrder: true, MessageType: shared.MIOP_REQUEST}
-		body := miop.Body{RepHeader: repHeader, RepBody: repBody}
-		miopPacketReply = miop.Packet{Hdr: header, Bd: body}
+		// Prepare reply
+		var params []interface{}
+		params = append(params, rep)
 
-		// marshall reply packet
-		msgToClientBytes := marshallerImpl.Marshall(miopPacketReply)
+		// Create miop reply packet
+		miop := miop.CreateReplyMIOP(params)
 
-		// send reply packet
-		srhImpl.Send(msgToClientBytes)
+		// Marshall miop packet
+		b = m.Marshall(miop)
+
+		// Send marshalled packet
+		s.Send(b)
 	}
 }

@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-const MaxConnectionAttempts = 10
+const MaxConnectionAttempts = 100
 
 // MQTT
 const MQTTHost = "mqtt://localhost:1883"
@@ -33,6 +33,10 @@ const DirectExchange = "direct_exchange"
 const TopicExchange = "topic_exchange"
 const HeadersExchange = "headers_exchange"
 const RoutingKey = "routing_key"
+
+const NamingPort = 1313
+const CalculadoraPort = 1314
+const LocalHost = "localhost"
 
 type Message struct {
 	Payload string
@@ -96,6 +100,10 @@ type IOR struct {
 	Port     int
 	Id       int
 	TypeName string
+}
+
+func NewIOR(h string, p int) IOR {
+	return IOR{Host: h, Port: p, Id: 0, TypeName: ""}
 }
 
 type Request struct {

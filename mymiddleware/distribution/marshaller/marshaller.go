@@ -9,12 +9,6 @@ import (
 
 type Marshaller struct{}
 
-func (Marshaller) MarshallerFactory() Marshaller {
-	gob.Register(miop.Packet{})
-
-	return Marshaller{}
-}
-
 func (Marshaller) Marshall(msg miop.Packet) []byte {
 
 	r, err := json.Marshal(msg)
@@ -35,4 +29,10 @@ func (Marshaller) Unmarshall(msg []byte) miop.Packet {
 		log.Fatalf("Marshaller:: Unmarshall:: %s", err)
 	}
 	return r
+}
+
+func (Marshaller) MarshallerFactory() Marshaller {
+	gob.Register(miop.Packet{})
+
+	return Marshaller{}
 }

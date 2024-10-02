@@ -2,20 +2,32 @@ package calculadorainvoker
 
 import (
 	"log"
-	"test/mymiddleware/app/calculadora"
+	"test/mymiddleware/app/businesses/calculadora"
 	"test/mymiddleware/distribution/marshaller"
 	"test/mymiddleware/distribution/miop"
 	"test/mymiddleware/infrastructure/srh"
+	"test/shared"
 )
 
-type Invoker struct{}
+type CalculadoraInvoker struct {
+	Ior shared.IOR
+}
 
-func (Invoker) Invoke(h string, p int) {
-	s := srh.NewSRH(h, p)
+func New(h string, p int) CalculadoraInvoker {
+	ior := shared.IOR{Host: h, Port: p}
+	inv := CalculadoraInvoker{Ior: ior}
+
+	return inv
+}
+
+func (i CalculadoraInvoker) Invoke() {
+	s := srh.NewSRH(i.Ior.Host, i.Ior.Port)
 	m := marshaller.Marshaller{}
-	c := calculadora.Calculadora{}
 	miopPacket := miop.Packet{}
 	var rep int
+
+	// Create an instance of Calculadora
+	c := calculadora.Calculadora{}
 
 	for {
 		// Invoke SRH
@@ -32,16 +44,16 @@ func (Invoker) Invoke(h string, p int) {
 
 		// Demultiplex request
 		switch r.Op {
-		case "Soma":
-			rep = c.Soma(_p1, _p2)
-		case "Diferenca":
-			rep = c.Diferenca(_p1, _p2)
-		case "Multiplicacao":
-			rep = c.Multiplicacao(_p1, _p2)
-		case "Divisao":
-			rep = c.Divisao(_p1, _p2)
+		case "Som":
+			rep = c.Som(_p1, _p2)
+		case "Dif":
+			rep = c.Dif(_p1, _p2)
+		case "Mul":
+			rep = c.Mul(_p1, _p2)
+		case "Div":
+			rep = c.Div(_p1, _p2)
 		default:
-			log.Fatal("Operation unknown")
+			log.Fatal("Invoker:: Operation '" + r.Op + "' is unknown:: ")
 		}
 
 		// Prepare reply

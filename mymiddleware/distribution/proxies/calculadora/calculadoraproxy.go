@@ -1,4 +1,4 @@
-package proxies
+package calculadoraproxy
 
 import (
 	"test/mymiddleware/distribution/requestor"
@@ -9,12 +9,12 @@ type CalculadoraProxy struct {
 	Ior shared.IOR
 }
 
-func (p *CalculadoraProxy) New(i shared.IOR) CalculadoraProxy {
-	p.Ior = i
-	return *p
+func New(i shared.IOR) CalculadoraProxy {
+	r := CalculadoraProxy{Ior: i}
+	return r
 }
 
-func (h *CalculadoraProxy) Soma(p1, p2 int) int {
+func (h *CalculadoraProxy) Som(p1, p2 int) int {
 
 	// 1. Configure input parameters
 	params := make([]interface{}, 2)
@@ -22,7 +22,28 @@ func (h *CalculadoraProxy) Soma(p1, p2 int) int {
 	params[1] = p2
 
 	// Configure remote request
-	req := shared.Request{Op: "Soma", Params: params}
+	req := shared.Request{Op: "Som", Params: params}
+
+	// Prepare invocation to Requestor
+	inv := shared.Invocation{Ior: h.Ior, Request: req}
+
+	// 3. Invoke Requestor
+	requestor := requestor.Requestor{}
+	r := requestor.Invoke(inv)
+
+	//4. Return something to the client
+	return int(r.Rep.Result[0].(float64))
+}
+
+func (h *CalculadoraProxy) Dif(p1, p2 int) int {
+
+	// 1. Configure input parameters
+	params := make([]interface{}, 2)
+	params[0] = p1
+	params[1] = p2
+
+	// Configure remote request
+	req := shared.Request{Op: "Dif", Params: params}
 
 	// Prepare invocation to Requestor
 	inv := shared.Invocation{Ior: h.Ior, Request: req}
@@ -35,7 +56,7 @@ func (h *CalculadoraProxy) Soma(p1, p2 int) int {
 	return int(r.Rep.Result[0].(float64)) // TODO
 }
 
-func (h *CalculadoraProxy) Diferenca(p1, p2 int) int {
+func (h *CalculadoraProxy) Mul(p1, p2 int) int {
 
 	// 1. Configure input parameters
 	params := make([]interface{}, 2)
@@ -43,7 +64,7 @@ func (h *CalculadoraProxy) Diferenca(p1, p2 int) int {
 	params[1] = p2
 
 	// Configure remote request
-	req := shared.Request{Op: "Diferenca", Params: params}
+	req := shared.Request{Op: "Mul", Params: params}
 
 	// Prepare invocation to Requestor
 	inv := shared.Invocation{Ior: h.Ior, Request: req}
@@ -56,7 +77,7 @@ func (h *CalculadoraProxy) Diferenca(p1, p2 int) int {
 	return int(r.Rep.Result[0].(float64)) // TODO
 }
 
-func (h *CalculadoraProxy) Multiplicacao(p1, p2 int) int {
+func (h *CalculadoraProxy) Div(p1, p2 int) int {
 
 	// 1. Configure input parameters
 	params := make([]interface{}, 2)
@@ -64,28 +85,7 @@ func (h *CalculadoraProxy) Multiplicacao(p1, p2 int) int {
 	params[1] = p2
 
 	// Configure remote request
-	req := shared.Request{Op: "Multiplicacao", Params: params}
-
-	// Prepare invocation to Requestor
-	inv := shared.Invocation{Ior: h.Ior, Request: req}
-
-	// 3. Invoke Requestor
-	requestor := requestor.Requestor{}
-	r := requestor.Invoke(inv)
-
-	//4. Return something to the client
-	return int(r.Rep.Result[0].(float64)) // TODO
-}
-
-func (h *CalculadoraProxy) Divisao(p1, p2 int) int {
-
-	// 1. Configure input parameters
-	params := make([]interface{}, 2)
-	params[0] = p1
-	params[1] = p2
-
-	// Configure remote request
-	req := shared.Request{Op: "Divisao", Params: params}
+	req := shared.Request{Op: "Div", Params: params}
 
 	// Prepare invocation to Requestor
 	inv := shared.Invocation{Ior: h.Ior, Request: req}

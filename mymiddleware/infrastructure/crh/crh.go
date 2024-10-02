@@ -17,6 +17,7 @@ type CRH struct {
 
 func NewCRH(h string, p int) *CRH {
 	r := new(CRH)
+
 	r.Host = h
 	r.Port = p
 	r.Connection = nil
@@ -27,20 +28,14 @@ func NewCRH(h string, p int) *CRH {
 func (crh *CRH) SendReceive(msgToServer []byte) []byte {
 	var err error
 
-	// 1: connect to servidor
-	h := 20 // time between attempts
-	if crh.Connection == nil {
-		for i := 0; i <= shared.MaxConnectionAttempts; i++ {
-			crh.Connection, err = net.Dial("tcp", crh.Host+":"+strconv.Itoa(crh.Port))
-			if err == nil {
-				break
-			} else {
-				time.Sleep(time.Duration(h) * time.Millisecond)
-				h *= 2
-			}
-			if i == shared.MaxConnectionAttempts {
-				log.Fatal("Number of connection attempts to server exceeded...")
-			}
+	for i := 0; i < shared.MaxConnectionAttempts; i++ {
+		crh.Connection, err = net.Dial("tcp", crh.Host+":"+strconv.Itoa(crh.Port))
+		if err == nil {
+			break
+		}
+		time.Sleep(10 * time.Millisecond)
+		if i == shared.MaxConnectionAttempts {
+			log.Fatal("CRH 0:: Number Max of attempts achieved...")
 		}
 	}
 
@@ -50,20 +45,20 @@ func (crh *CRH) SendReceive(msgToServer []byte) []byte {
 	binary.LittleEndian.PutUint32(sizeMsgToServer, l)
 	_, err = crh.Connection.Write(sizeMsgToServer)
 	if err != nil {
-		log.Fatalf("CRH:: %s", err)
+		log.Fatalf("CRH 1:: %s", err)
 	}
 
 	// 3: send message
 	_, err = crh.Connection.Write(msgToServer)
 	if err != nil {
-		log.Fatalf("CRH:: %s", err)
+		log.Fatalf("CRH 2:: %s", err)
 	}
 
 	// 4: receive message's size
 	sizeMsgFromServer := make([]byte, 4)
 	_, err = crh.Connection.Read(sizeMsgFromServer)
 	if err != nil {
-		log.Fatalf("SRH:: %s", err)
+		log.Fatalf("CRH 3:: %s", err)
 	}
 	sizeFromServerInt := binary.LittleEndian.Uint32(sizeMsgFromServer)
 
@@ -71,11 +66,10 @@ func (crh *CRH) SendReceive(msgToServer []byte) []byte {
 	msgFromServer := make([]byte, sizeFromServerInt)
 	_, err = crh.Connection.Read(msgFromServer)
 	if err != nil {
-		log.Fatalf("SRH:: %s", err)
+		log.Fatalf("CRH 4:: %s", err)
 	}
 
 	crh.Connection.Close()
-	crh.Connection = nil
 
 	return msgFromServer
 }

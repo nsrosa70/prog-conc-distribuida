@@ -1,38 +1,38 @@
 package naming
 
 import (
-	"mymiddleware/distribution/clientproxy"
+	"test/shared"
 )
 
 type NamingService struct {
-	Repository map[string]clientproxy.ClientProxy
+	Repository map[string]shared.IOR
 }
 
-func (naming *NamingService) Register(name string, proxy clientproxy.ClientProxy) bool {
+func (n *NamingService) Bind(s string, i shared.IOR) bool {
 	r := false
 
 	// check if repository is already created
-	if len(naming.Repository) == 0 {
-		naming.Repository = make(map[string]clientproxy.ClientProxy)
+	if len(n.Repository) == 0 {
+		n.Repository = make(map[string]shared.IOR)
 	}
 	// check if the service is already registered
-	_, ok := naming.Repository[name]
+	_, ok := n.Repository[s]
 	if ok {
 		r = false // service already registered
 	} else { // service not registered
-		naming.Repository[name] = clientproxy.ClientProxy{TypeName: proxy.TypeName, Host: proxy.Host, Port: proxy.Port}
+		n.Repository[s] = shared.IOR{TypeName: i.TypeName, Host: i.Host, Port: i.Port}
 		r = true
 	}
 
 	return r
 }
 
-func (naming NamingService) Lookup(name string) clientproxy.ClientProxy {
+func (n NamingService) Find(s string) shared.IOR {
 
-	return naming.Repository[name]
+	return n.Repository[s]
 }
 
-func (naming NamingService) List(name string) map[string]clientproxy.ClientProxy {
+func (n NamingService) List() map[string]shared.IOR {
 
-	return naming.Repository
+	return n.Repository
 }
