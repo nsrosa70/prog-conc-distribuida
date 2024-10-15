@@ -92,7 +92,7 @@ func HandleTCPConnection(conn net.Conn) {
 func CalculatorServerUDP() {
 	msgFromClient := make([]byte, 1024)
 
-	// resolve server address
+	// resolve subscriber address
 	addr, err := net.ResolveUDPAddr("udp", ":"+strconv.Itoa(shared.CalculatorPort))
 	if err != nil {
 		fmt.Println(err)

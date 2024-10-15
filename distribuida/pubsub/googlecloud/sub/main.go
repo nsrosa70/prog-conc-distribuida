@@ -17,7 +17,7 @@ func main() {
 	// Cria cliente
 	client, err := pubsub.NewClient(ctx, projectID)
 	if err != nil {
-		log.Fatalf("Failed to create a client", err)
+		log.Fatalf("Failed to create a publisher", err)
 	}
 
 	// subscreve ao tópico / recebe mensagem

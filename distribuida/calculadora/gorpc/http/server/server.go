@@ -12,10 +12,10 @@ import (
 
 func main() {
 
-	// 1: Criar a instância da calculadora
+	// 1: Criar a instância da messagingservice
 	calculator := new(impl.Calculadora)
 
-	// 2: Cria um novo servidor RPC e registrar a calculadora
+	// 2: Cria um novo servidor RPC e registrar a messagingservice
 	server := rpc.NewServer()
 	server.RegisterName("Calculadora", calculator)
 

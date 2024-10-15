@@ -16,14 +16,14 @@ func main() {
 	// Cria cliente
 	client, err := pubsub.NewClient(ctx, projectID)
 	if err != nil {
-		log.Fatalf("Failed to create client: %v", err)
+		log.Fatalf("Failed to create publisher: %v", err)
 	}
 	defer client.Close()
 
 	// publica mensagem
 	topic := client.Topic(topicID)
 	res := topic.Publish(ctx, &pubsub.Message{
-		Data: []byte("calculadora world"),
+		Data: []byte("messagingservice world"),
 	})
 
 	if res == nil {

@@ -1,8 +1,8 @@
 package main
 
 import (
-	gen1 "aulas/distribuida/calculadora/grpc/proto"
 	gen2 "aulas/distribuida/fibonacci/proto"
+	gen1 "aulas/distribuida/messagingservice/grpc/proto"
 	"aulas/distribuida/shared"
 	"fmt"
 	"golang.org/x/net/context"
@@ -23,7 +23,7 @@ func main() {
 	// fecha conexões
 	defer conn.Close()
 
-	// cria um proxy para a calculadora
+	// cria um proxy para a messagingservice
 	calc := gen1.NewCalculadoraClient(conn)
 
 	// cria um contexto para execução remota

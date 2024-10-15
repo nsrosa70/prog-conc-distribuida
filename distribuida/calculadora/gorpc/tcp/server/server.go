@@ -12,13 +12,13 @@ import (
 )
 
 func main() {
-	// 1: Criar instância da calculadora.
+	// 1: Criar instância da messagingservice.
 	mathService := new(impl.Calculadora)
 
-	// 2: Registrar a instância da calculadora no RPC
+	// 2: Registrar a instância da messagingservice no RPC
 	server := rpc.NewServer()
 	err := server.Register(mathService)
-	shared.ChecaErro(err, "Erro ao registrar a calculadora")
+	shared.ChecaErro(err, "Erro ao registrar a messagingservice")
 
 	// 3: Criar listener para as conexões remotas
 	listener, err := net.Listen("tcp", ":"+strconv.Itoa(shared.CalculatorPort))

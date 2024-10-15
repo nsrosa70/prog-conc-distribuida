@@ -1,7 +1,7 @@
 package impl
 
 import (
-	gen "aulas/distribuida/calculadora/grpc/proto"
+	gen "aulas/distribuida/messagingservice/grpc/proto"
 	"golang.org/x/net/context"
 )
 

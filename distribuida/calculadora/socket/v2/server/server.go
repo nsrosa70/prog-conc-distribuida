@@ -13,7 +13,7 @@ import (
 func CalculatorServerTCP() {
 
 	// return an address of a TCP end point
-	r,err := net.ResolveTCPAddr("tcp",":"+strconv.Itoa(shared.CALCULATOR_PORT))
+	r, err := net.ResolveTCPAddr("tcp", ":"+strconv.Itoa(shared.CALCULATOR_PORT))
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(0)
@@ -66,7 +66,7 @@ func HandleTCP(conn net.Conn) {
 		// Create response
 		msgToClient := shared.Reply{[]interface{}{r}}
 
-		// Serialise and send response to client
+		// Serialise and send response to publisher
 		err = jsonEncoder.Encode(msgToClient)
 		if err != nil {
 			os.Exit(0)
@@ -82,4 +82,3 @@ func main() {
 
 	fmt.Scanln()
 }
-

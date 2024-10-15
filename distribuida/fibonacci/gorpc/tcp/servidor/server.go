@@ -11,7 +11,7 @@ import (
 
 func servidor() {
 
-	// cria instância da calculadora
+	// cria instância da messagingservice
 	fibonacci := new(fibonacci.FibonacciRPC)
 
 	// cria um novo servidor RPC e registra o fibonacci

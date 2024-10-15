@@ -1,4 +1,4 @@
-// socket-server project servidor.go
+// socket-subscriber project main.go
 // developer.com/languages/intro-socket-programming-go/
 package main
 

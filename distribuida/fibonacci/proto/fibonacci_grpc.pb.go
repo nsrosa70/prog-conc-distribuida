@@ -18,7 +18,7 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// FibonacciClient is the client API for Fibonacci service.
+// FibonacciClient is the publisher API for Fibonacci service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FibonacciClient interface {
@@ -42,7 +42,7 @@ func (c *fibonacciClient) Fibo(ctx context.Context, in *RequestFibo, opts ...grp
 	return out, nil
 }
 
-// FibonacciServer is the server API for Fibonacci service.
+// FibonacciServer is the subscriber API for Fibonacci service.
 // All implementations should embed UnimplementedFibonacciServer
 // for forward compatibility
 type FibonacciServer interface {

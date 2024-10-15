@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.28.1
 // 	protoc        v4.24.1
-// source: proto/calculadora.proto
+// source: proto/messagingservice.proto
 
 package gen
 
@@ -76,7 +76,7 @@ func (x *Request) GetP2() int32 {
 	return 0
 }
 
-//Mensagem de resposta
+// Mensagem de resposta
 type Reply struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -166,18 +166,18 @@ func file_proto_calculadora_proto_rawDescGZIP() []byte {
 
 var file_proto_calculadora_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_proto_calculadora_proto_goTypes = []interface{}{
-	(*Request)(nil), // 0: calculadora.Request
-	(*Reply)(nil),   // 1: calculadora.Reply
+	(*Request)(nil), // 0: messagingservice.Request
+	(*Reply)(nil),   // 1: messagingservice.Reply
 }
 var file_proto_calculadora_proto_depIdxs = []int32{
-	0, // 0: calculadora.Calculadora.Add:input_type -> calculadora.Request
-	0, // 1: calculadora.Calculadora.Sub:input_type -> calculadora.Request
-	0, // 2: calculadora.Calculadora.Div:input_type -> calculadora.Request
-	0, // 3: calculadora.Calculadora.Mul:input_type -> calculadora.Request
-	1, // 4: calculadora.Calculadora.Add:output_type -> calculadora.Reply
-	1, // 5: calculadora.Calculadora.Sub:output_type -> calculadora.Reply
-	1, // 6: calculadora.Calculadora.Div:output_type -> calculadora.Reply
-	1, // 7: calculadora.Calculadora.Mul:output_type -> calculadora.Reply
+	0, // 0: messagingservice.Calculadora.Add:input_type -> messagingservice.Request
+	0, // 1: messagingservice.Calculadora.Sub:input_type -> messagingservice.Request
+	0, // 2: messagingservice.Calculadora.Div:input_type -> messagingservice.Request
+	0, // 3: messagingservice.Calculadora.Mul:input_type -> messagingservice.Request
+	1, // 4: messagingservice.Calculadora.Add:output_type -> messagingservice.Reply
+	1, // 5: messagingservice.Calculadora.Sub:output_type -> messagingservice.Reply
+	1, // 6: messagingservice.Calculadora.Div:output_type -> messagingservice.Reply
+	1, // 7: messagingservice.Calculadora.Mul:output_type -> messagingservice.Reply
 	4, // [4:8] is the sub-list for method output_type
 	0, // [0:4] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name

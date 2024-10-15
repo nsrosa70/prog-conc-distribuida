@@ -2,10 +2,10 @@
 package main
 
 import (
-	gen1 "aulas/distribuida/calculadora/grpc/proto"
-	calculadora "aulas/distribuida/calculadora/impl"
 	fibonacci "aulas/distribuida/fibonacci/impl"
 	gen2 "aulas/distribuida/fibonacci/proto"
+	gen1 "aulas/distribuida/messagingservice/grpc/proto"
+	calculadora "aulas/distribuida/messagingservice/impl"
 	"aulas/distribuida/shared"
 	"fmt"
 	"google.golang.org/grpc"

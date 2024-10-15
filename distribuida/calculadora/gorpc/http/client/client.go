@@ -23,7 +23,7 @@ func Cliente() {
 		shared.ChecaErro(err, "Não foi possível fechar a conexão TCP com o servidor da Calculadora...")
 	}(clientCalc)
 
-	// 2: Invocar operação remota da calculadora
+	// 2: Invocar operação remota da messagingservice
 	req := impl.Request{P1: 10, P2: 20}
 	rep := impl.Reply{}
 	err = clientCalc.Call("Calculadora.Add", req, &rep)

@@ -14,10 +14,10 @@ func main() {
 	// Sets your Google Cloud Platform project ID.
 	projectID := "pcd40813"
 
-	// Creates a client.
+	// Creates a publisher.
 	client, err := pubsub.NewClient(ctx, projectID)
 	if err != nil {
-		log.Fatalf("Failed to create client: %v", err)
+		log.Fatalf("Failed to create publisher: %v", err)
 	}
 	defer client.Close()
 

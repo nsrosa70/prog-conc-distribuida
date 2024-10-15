@@ -20,7 +20,7 @@ func CalculatorClientTCP() {
 		os.Exit(0)
 	}
 
-	// Connect to server
+	// Connect to subscriber
 	conn, err := net.DialTCP("tcp", nil, r)
 	if err != nil {
 		fmt.Println(err)
@@ -53,7 +53,7 @@ func CalculatorClientTCP() {
 				os.Exit(0)
 			}
 
-			// Receive response from server
+			// Receive response from subscriber
 			err = jsonDecoder.Decode(&response)
 			if err != nil {
 				fmt.Println(err)

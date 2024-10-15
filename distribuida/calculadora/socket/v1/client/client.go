@@ -75,14 +75,14 @@ func CalculatorClientTCP(n int) {
 func CalculatorClientUDP(n int) {
 	var response shared.Reply
 
-	// resolve server address
+	// resolve subscriber address
 	addr, err := net.ResolveUDPAddr("udp", "localhost:"+strconv.Itoa(shared.CalculatorPort))
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(0)
 	}
 
-	// connect to server -- does not create a connection
+	// connect to subscriber -- does not create a connection
 	conn, err := net.DialUDP("udp", nil, addr)
 	if err != nil {
 		fmt.Println(err)

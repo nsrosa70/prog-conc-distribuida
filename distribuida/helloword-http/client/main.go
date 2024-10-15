@@ -8,7 +8,7 @@ import (
 
 func main() {
 
-	// invoke server & receive response
+	// invoke subscriber & receive response
 	response, err := http.Get("http://localhost:8080/kello")
 	if err != nil {
 		fmt.Println("Failed to make an HTTP request:", err)
@@ -22,5 +22,5 @@ func main() {
 		return
 	}
 
-	fmt.Println("Response from server:", string(body))
+	fmt.Println("Response from subscriber:", string(body))
 }

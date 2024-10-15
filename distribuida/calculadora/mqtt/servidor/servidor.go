@@ -1,7 +1,7 @@
 package main
 
 import (
-	calculadora "aulas/distribuida/calculadora/impl"
+	calculadora "aulas/distribuida/messagingservice/impl"
 	"aulas/distribuida/shared"
 	"encoding/json"
 	"fmt"

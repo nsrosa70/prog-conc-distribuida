@@ -36,7 +36,11 @@ const RoutingKey = "routing_key"
 const NamingPort = 1313
 const CalculadoraPort = 1314
 const FibonacciPort = 1315
+const MessagingPort = 1316
 const LocalHost = "localhost"
+const CallBackPort = 1317
+
+const MaxQueueSize = 10000
 
 type Message struct {
 	Payload string

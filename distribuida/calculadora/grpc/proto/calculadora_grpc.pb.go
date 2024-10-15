@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v4.24.1
-// source: proto/calculadora.proto
+// source: proto/messagingservice.proto
 
 package gen
 
@@ -18,7 +18,7 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// CalculadoraClient is the client API for Calculadora service.
+// CalculadoraClient is the publisher API for Calculadora service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CalculadoraClient interface {
@@ -38,7 +38,7 @@ func NewCalculadoraClient(cc grpc.ClientConnInterface) CalculadoraClient {
 
 func (c *calculadoraClient) Add(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Reply, error) {
 	out := new(Reply)
-	err := c.cc.Invoke(ctx, "/calculadora.Calculadora/Add", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/messagingservice.Calculadora/Add", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +47,7 @@ func (c *calculadoraClient) Add(ctx context.Context, in *Request, opts ...grpc.C
 
 func (c *calculadoraClient) Sub(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Reply, error) {
 	out := new(Reply)
-	err := c.cc.Invoke(ctx, "/calculadora.Calculadora/Sub", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/messagingservice.Calculadora/Sub", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +56,7 @@ func (c *calculadoraClient) Sub(ctx context.Context, in *Request, opts ...grpc.C
 
 func (c *calculadoraClient) Div(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Reply, error) {
 	out := new(Reply)
-	err := c.cc.Invoke(ctx, "/calculadora.Calculadora/Div", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/messagingservice.Calculadora/Div", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -65,14 +65,14 @@ func (c *calculadoraClient) Div(ctx context.Context, in *Request, opts ...grpc.C
 
 func (c *calculadoraClient) Mul(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Reply, error) {
 	out := new(Reply)
-	err := c.cc.Invoke(ctx, "/calculadora.Calculadora/Mul", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/messagingservice.Calculadora/Mul", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// CalculadoraServer is the server API for Calculadora service.
+// CalculadoraServer is the subscriber API for Calculadora service.
 // All implementations should embed UnimplementedCalculadoraServer
 // for forward compatibility
 type CalculadoraServer interface {
@@ -120,7 +120,7 @@ func _Calculadora_Add_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/calculadora.Calculadora/Add",
+		FullMethod: "/messagingservice.Calculadora/Add",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(CalculadoraServer).Add(ctx, req.(*Request))
@@ -138,7 +138,7 @@ func _Calculadora_Sub_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/calculadora.Calculadora/Sub",
+		FullMethod: "/messagingservice.Calculadora/Sub",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(CalculadoraServer).Sub(ctx, req.(*Request))
@@ -156,7 +156,7 @@ func _Calculadora_Div_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/calculadora.Calculadora/Div",
+		FullMethod: "/messagingservice.Calculadora/Div",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(CalculadoraServer).Div(ctx, req.(*Request))
@@ -174,7 +174,7 @@ func _Calculadora_Mul_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/calculadora.Calculadora/Mul",
+		FullMethod: "/messagingservice.Calculadora/Mul",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(CalculadoraServer).Mul(ctx, req.(*Request))
@@ -186,7 +186,7 @@ func _Calculadora_Mul_Handler(srv interface{}, ctx context.Context, dec func(int
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Calculadora_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "calculadora.Calculadora",
+	ServiceName: "messagingservice.Calculadora",
 	HandlerType: (*CalculadoraServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -207,5 +207,5 @@ var Calculadora_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "proto/calculadora.proto",
+	Metadata: "proto/messagingservice.proto",
 }

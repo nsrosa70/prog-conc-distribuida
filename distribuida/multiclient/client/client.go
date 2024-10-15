@@ -1,4 +1,4 @@
-// socket-client project servidor.go
+// socket-publisher project main.go
 package main
 
 import (

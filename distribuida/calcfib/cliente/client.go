@@ -28,7 +28,7 @@ func Cliente() {
 		shared.ChecaErro(err, "Não foi possível fechar a Conexão TCP para o servidor do Fibonacci...")
 	}(clientFibo)
 
-	// invoca operação remota da calculadora
+	// invoca operação remota da messagingservice
 	args := shared.Args{A: 3, B: 4}
 	err = clientCalc.Call("Calculator.Add", args, &reply)
 	shared.ChecaErro(err, "Erro na invocação remora da Calucladora...")

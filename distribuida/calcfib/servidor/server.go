@@ -1,8 +1,8 @@
 package main
 
 import (
-	calculadora "aulas/distribuida/calculadora/impl"
 	fibonacci "aulas/distribuida/fibonacci/impl"
+	calculadora "aulas/distribuida/messagingservice/impl"
 	"aulas/distribuida/shared"
 	"fmt"
 	"net"
@@ -13,11 +13,11 @@ import (
 
 func servidor() {
 
-	// cria instância da calculadora/fibonacci
+	// cria instância da messagingservice/fibonacci
 	calculadora := new(calculadora.CalculadoraRPC)
 	fibonacci := new(fibonacci.FibonacciRPC)
 
-	// cria um novo servidor e registra a calculadora
+	// cria um novo servidor e registra a messagingservice
 	server := rpc.NewServer()
 	err := server.RegisterName("Calculator", calculadora)
 	shared.ChecaErro(err, "Não foi possível registrar a Calculadora no servidor...")
@@ -42,7 +42,7 @@ func servidor() {
 
 	// aguarda por invocações
 	fmt.Println("Servidor está pronto (RPC-TCP/HTTP)...")
-	go server.Accept(ln) // calculadora
+	go server.Accept(ln) // messagingservice
 	http.Serve(l, nil)   // fibonacci
 }
 

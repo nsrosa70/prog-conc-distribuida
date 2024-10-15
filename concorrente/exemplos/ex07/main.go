@@ -15,5 +15,5 @@ func say(s string) {
 func main() {
 	runtime.GOMAXPROCS(1)
 	go say("world")
-	say("calculadora")
+	say("messagingservice")
 }
