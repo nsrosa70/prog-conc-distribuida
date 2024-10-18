@@ -118,3 +118,17 @@ type Request struct {
 type Reply struct {
 	Result []interface{}
 }
+
+func AvailablePort() int {
+	r := 1024
+
+	for port := 1024; port < 2000; port++ {
+		ln, err := net.Listen("tcp", ":"+strconv.Itoa(port))
+
+		if err == nil {
+			ln.Close()
+			r = port
+		}
+	}
+	return r
+}

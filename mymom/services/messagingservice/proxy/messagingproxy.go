@@ -1,9 +1,11 @@
 package messagingproxy
 
 import (
+	"encoding/json"
+	"log"
 	"test/mymom/services/messagingservice/event"
 	"test/myrpc/distribution/requestor"
-	srh2 "test/myrpc/infrastructure/srh"
+	"test/myrpc/infrastructure/srh"
 	"test/shared"
 )
 
@@ -38,34 +40,44 @@ func (h *MessagingProxy) Publish(_p1 string, _p2 event.Event) bool {
 	return r.Rep.Result[0].(bool)
 }
 
-func (h *MessagingProxy) Consume(_p1 string) *chan string {
+func (h *MessagingProxy) Consume(_p1 string) *chan event.Event {
 
-	// 1. Configure input parameters
+	// 1.Configure input parameters
 	params := make([]interface{}, 1)
 	params[0] = _p1
 
-	// Configure remote request
+	// 2.Configure remote request
 	req := shared.Request{Op: "Consume", Params: params}
 
-	// Prepare invocation to Requestor
+	// 3.Prepare invocation to Requestor
 	inv := shared.Invocation{Ior: h.Ior, Request: req}
 
-	// 3. Create call back server first
-	ch := make(chan string)
+	// 4.Create & invoke callback
+	ch := make(chan event.Event)
 	go Callback(ch)
 
-	// 4. Invoke Requestor
+	// 5.Invoke Requestor
 	requestor := requestor.Requestor{}
 	_ = requestor.Invoke(inv)
 
-	//4. Return callback channel
+	//6.Return callback channel
 	return &ch
 }
 
-func Callback(ch chan string) {
-	srh := srh2.NewSRH(shared.LocalHost, shared.CallBackPort)
+func Callback(ch chan event.Event) {
+	// Create server (SRH)
+	s := srh.NewSRH(shared.LocalHost, shared.CallBackPort)
+
+	// Receive events from broker
 	for {
-		msg := srh.Receive()
-		ch <- string(msg)
+		msg := s.Receive()
+		ev := event.Event{}
+		err := json.Unmarshal(msg, &ev)
+		if err != nil {
+			log.Fatal("Messaging:: Callback:: encode error:", err)
+		}
+
+		// Send event to Subscriber
+		ch <- ev
 	}
 }

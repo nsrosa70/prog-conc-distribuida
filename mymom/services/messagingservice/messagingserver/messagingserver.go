@@ -11,6 +11,8 @@ import (
 )
 
 const Fila = "Fila 1"
+const RequestQueue = "RequestQueue"
+const ReplyQueue = "ReplyQueue"
 
 func main() {
 
@@ -18,9 +20,10 @@ func main() {
 	time.Sleep(500 * time.Millisecond)
 
 	go Subscriber()
-	time.Sleep(30 * time.Second)
-
 	go Publisher()
+
+	//go Servidor()
+	//go Cliente()
 
 	fmt.Println("'Servidor de Filas' em execução...")
 	fmt.Scanln()
@@ -54,7 +57,37 @@ func Subscriber() {
 	ch := messaging.Consume(Fila)
 
 	// Consume messages
-	for i := range *ch {
-		fmt.Println("Subscriber:: ", i)
+	for e := range *ch {
+		fmt.Println("Subscriber:: ", e.E)
 	}
+}
+
+func Cliente() {
+	// Obtain messagingservice proxy
+	messaging := messagingproxy.New(shared.LocalHost, shared.MessagingPort)
+
+	// Subscribe to Reply queue
+	ch := messaging.Consume(ReplyQueue)
+
+	e := event.Event{E: "Add(1,2)"}
+	messaging.Publish(RequestQueue, e)
+
+	r := <-*ch
+
+	fmt.Println(r)
+}
+
+func Servidor() {
+	// Obtain messagingservice proxy
+	messaging := messagingproxy.New(shared.LocalHost, shared.MessagingPort)
+
+	// Subscribe to Reply queue
+	ch := messaging.Consume(RequestQueue)
+
+	req := <-*ch
+
+	fmt.Println(req)
+
+	e := event.Event{E: "Add(1,2)"}
+	messaging.Publish(ReplyQueue, e)
 }
