@@ -8,7 +8,10 @@ import (
 )
 
 type Requestor struct {
-	Inv shared.Invocation
+}
+
+func NewRequestor() Requestor {
+	return Requestor{}
 }
 
 func (Requestor) Invoke(i shared.Invocation) shared.Termination {

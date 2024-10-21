@@ -17,5 +17,5 @@ func main() {
 	naming.Bind("Calculadora", shared.NewIOR(calcInv.Ior.Host, calcInv.Ior.Port))
 
 	// Invoke services
-	go calcInv.Invoke()
+	calcInv.Invoke()
 }

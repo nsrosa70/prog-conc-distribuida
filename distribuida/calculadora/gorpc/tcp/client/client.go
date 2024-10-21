@@ -36,7 +36,7 @@ func ClientePerf() {
 	shared.ChecaErro(err, "Erro ao conectar ao servidor")
 	defer client.Close()
 
-	req := impl.Request{P1: 10, P2: 20}
+	req := impl.Request{P1: 1, P2: 2}
 	rep := impl.Reply{}
 	for i := 0; i < shared.StatisticSample; i++ {
 		t1 := time.Now()
@@ -44,6 +44,8 @@ func ClientePerf() {
 			err = client.Call("Calculadora.Add", req, &rep)
 			shared.ChecaErro(err, "Erro na invocação da Calculadora remota...")
 		}
-		fmt.Printf("tcp;%v\n", time.Now().Sub(t1).Milliseconds())
+		//fmt.Printf("tcp;%v\n", time.Now().Sub(t1).Milliseconds())
+		fmt.Println(i, ";", time.Now().Sub(t1).Milliseconds())
+
 	}
 }

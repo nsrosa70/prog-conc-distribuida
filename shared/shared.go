@@ -17,7 +17,7 @@ const MQTTReply = "reply"
 
 // Other configurations
 const StatisticSample = 30
-const SampleSize = 10000
+const SampleSize = 1000
 const CalculatorPort = 4040
 const GrpcPort = 5050
 const NAMING_PORT = 1414
