@@ -1,7 +1,7 @@
 package eventbuffer
 
 import (
-	"aulas/concorrente/producerconsumer/event"
+	"test/concorrente/producerconsumer/event"
 )
 
 type EventBuffer struct {

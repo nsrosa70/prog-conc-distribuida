@@ -65,5 +65,3 @@ func (b *Bank) Withdraw(amount int) bool {
 	b.Signal()
 	return r
 }
-
-

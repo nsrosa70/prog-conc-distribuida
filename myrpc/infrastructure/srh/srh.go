@@ -101,6 +101,7 @@ func (srh *SRH) Send(msgToClient []byte) {
 
 func (srh *SRH) Receive() []byte {
 
+	// 1. accept new connections
 	srh.Connection, err = srh.Ln.Accept()
 	if err != nil {
 		log.Fatalf("SRH 1:: %s", err)

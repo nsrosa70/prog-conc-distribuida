@@ -21,6 +21,7 @@ func Cliente() {
 	// Obtain proxies
 	naming := namingproxy.New(shared.LocalHost, shared.NamingPort)
 	calc := calculadoraproxy.New(naming.Find("Calculadora"))
+	fmt.Println("Cliente:: HERE", calc)
 
 	// Chamada remota a Calculadora
 	fmt.Println(calc.Som(1, 2))
@@ -33,7 +34,7 @@ func ClientePerf() {
 	for i := 0; i < shared.StatisticSample; i++ {
 		t1 := time.Now()
 		for j := 0; j < shared.SampleSize; j++ {
-			calc.Som(1, 2)
+			fmt.Println("Cliente", calc.Som(1, 2))
 		}
 		fmt.Println(i, ";", time.Now().Sub(t1).Milliseconds())
 		time.Sleep(100 * time.Millisecond)

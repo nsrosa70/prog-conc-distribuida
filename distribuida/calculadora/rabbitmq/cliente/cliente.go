@@ -1,7 +1,7 @@
 package main
 
 import (
-	"aulas/distribuida/shared"
+	"aulas/shared"
 	"encoding/json"
 	"fmt"
 	"github.com/streadway/amqp"
@@ -47,7 +47,8 @@ func main() {
 
 	for i := 0; i < shared.SampleSize; i++ {
 		// prepara mensagem
-		msgRequest := shared.Request{Op: "add", P1: i + 1, P2: i + 1}
+		params := []interface{}{i + 1, i + 1}
+		msgRequest := shared.Request{Op: "add", Params: params}
 		msgRequestBytes, err := json.Marshal(msgRequest)
 		shared.ChecaErro(err, "Falha ao serializar a mensagem")
 
@@ -73,6 +74,6 @@ func main() {
 		msgResponse := shared.Reply{}
 		err = json.Unmarshal(m.Body, &msgResponse)
 		shared.ChecaErro(err, "Erro na deserialização da resposta")
-		fmt.Printf("%v(%v,%v)=%v\n", msgRequest.Op, msgRequest.P1, msgRequest.P2, msgResponse.Result[0])
+		fmt.Printf("%v(%v,%v)=%v\n", msgRequest.Op, msgRequest.Params[0], msgRequest.Params[1], msgResponse.Result[0])
 	}
 }

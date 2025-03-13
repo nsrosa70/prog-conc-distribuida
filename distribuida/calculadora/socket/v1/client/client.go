@@ -1,12 +1,12 @@
 package main
 
 import (
-	"aulas/distribuida/shared"
 	"encoding/json"
 	"fmt"
 	"net"
 	"os"
 	"strconv"
+	"test/shared"
 )
 
 func main() {
@@ -51,8 +51,10 @@ func CalculatorClientTCP(n int) {
 
 	for i := 0; i < n; i++ {
 
+		params := []interface{}
+
 		// prepara request
-		msgToServer := shared.Request{"add", i, i}
+		msgToServer := shared.Request{"add", params}
 
 		// serializa e envia request para o servidor
 		err = jsonEncoder.Encode(msgToServer)

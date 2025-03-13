@@ -1,9 +1,9 @@
 package cond
 
 import (
-	"aulas/concorrente/producerconsumer/event"
-	"aulas/concorrente/producerconsumer/eventbuffer"
 	"sync"
+	"test/concorrente/producerconsumer/event"
+	"test/concorrente/producerconsumer/eventbuffer"
 )
 
 type CondEventBuffer struct {

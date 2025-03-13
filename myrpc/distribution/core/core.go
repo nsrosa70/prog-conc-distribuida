@@ -1,22 +1,15 @@
 package core
 
 import (
-	"test/myrpc/distribution/marshaller"
 	"test/myrpc/distribution/requestor"
-	"test/myrpc/infrastructure/crh"
 )
 
 type Core struct {
-	_Requestor  requestor.Requestor
-	_Crh        crh.CRH
-	_Marshaller marshaller.Marshaller
+	R requestor.Requestor
 }
 
-func NewCore() Core {
-	r := Core{}
-	/*	r._Requestor = NewRequestor()
-		r._Crh = crh.NewCRH()
-		r._Marshaller = marshaller.Marshaller{}
-	*/
+func NewCore(h string, p int) *Core {
+	r := new(Core)
+	r.R = requestor.NewRequestor(h, p)
 	return r
 }

@@ -1,9 +1,9 @@
 package semaforo
 
 import (
-	"aulas/concorrente/producerconsumer/event"
-	"aulas/concorrente/producerconsumer/eventbuffer"
 	"runtime"
+	"test/concorrente/producerconsumer/event"
+	"test/concorrente/producerconsumer/eventbuffer"
 )
 
 type SemaforoEventBuffer struct {

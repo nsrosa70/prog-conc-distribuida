@@ -1,17 +1,17 @@
 package main
 
 import (
-	"aulas/concorrente/producerconsumer/event"
-	"aulas/concorrente/producerconsumer/eventbuffer"
-	"aulas/concorrente/producerconsumer/shared"
 	"fmt"
 	"strconv"
 	"sync"
+	"test/concorrente/producerconsumer/event"
+	"test/concorrente/producerconsumer/eventbuffer"
+	"test/concorrente/producerconsumer/shared"
 	"time"
 )
 
-const NumeroDeProdutores = 100
-const NumeroDeConsumidores = 100
+const NumeroDeProdutores = 1000
+const NumeroDeConsumidores = 1000
 const TamanhoDaAmostra = 100
 const CapacidadeDoBuffer = 1000 // 1, 100, 1.000
 const NumeroDeItens = 10000
@@ -22,7 +22,7 @@ func main() {
 	wg := sync.WaitGroup{}
 
 	for idx := 0; idx < TamanhoDaAmostra; idx++ {
-		EB = shared.NewEventBuffer("Cond", CapacidadeDoBuffer, NumeroDeProdutores*NumeroDeItens) // tipo de primitiva
+		EB = shared.NewEventBuffer("Mutex", CapacidadeDoBuffer, NumeroDeProdutores*NumeroDeItens) // tipo de primitiva
 		t1 := time.Now()
 		for i := 0; i < NumeroDeConsumidores; i++ { // inicia os consumidores
 			wg.Add(1)

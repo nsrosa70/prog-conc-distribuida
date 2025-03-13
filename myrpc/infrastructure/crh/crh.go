@@ -2,6 +2,7 @@ package crh
 
 import (
 	"encoding/binary"
+	"fmt"
 	"log"
 	"net"
 	"strconv"
@@ -84,16 +85,22 @@ func (crh *CRH) SendReceive(msgToServer []byte) []byte {
 	for {
 		switch s {
 		case 0: // open connection
-			for i := 0; i < shared.MaxConnectionAttempts; i++ {
-				crh.Connection, err = net.Dial("tcp", crh.Host+":"+strconv.Itoa(crh.Port))
-				if err == nil {
-					s = 1
-					break
-				} else {
-					if i == shared.MaxConnectionAttempts {
-						log.Fatal("CRH 0:: Number Max of attempts achieved...")
+			if crh.Connection == nil {
+				for i := 0; i < shared.MaxConnectionAttempts; i++ {
+					crh.Connection, err = net.Dial("tcp", crh.Host+":"+strconv.Itoa(crh.Port))
+					fmt.Println("CRH:: Just Opened", crh.Connection, crh.Port)
+					if err == nil {
+						s = 1
+						break
+					} else {
+						if i == shared.MaxConnectionAttempts {
+							log.Fatal("CRH 0:: Number Max of attempts achieved...")
+						}
 					}
 				}
+			} else { // connection already open
+				fmt.Println("CRH:: Connection Already Open", crh.Connection)
+				s = 1
 			}
 		case 1:
 			// 2: send message's size
@@ -129,7 +136,7 @@ func (crh *CRH) SendReceive(msgToServer []byte) []byte {
 			}
 			s = 4
 		case 4:
-			crh.Connection.Close()
+			//crh.Connection.Close()
 			return msgFromServer
 		}
 	}

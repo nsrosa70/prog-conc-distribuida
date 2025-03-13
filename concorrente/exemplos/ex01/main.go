@@ -6,7 +6,7 @@ import (
 
 func g1(ch chan int) {
 	n := 1
-	fmt.Println("g1 sends",n)
+	fmt.Println("g1 sends", n)
 	ch <- 1 // send int through channel
 }
 
@@ -21,5 +21,5 @@ func main() {
 	go g1(ch) // start g1
 	go g2(ch) // start g2
 
-	_,_ = fmt.Scanln()
+	_, _ = fmt.Scanln()
 }

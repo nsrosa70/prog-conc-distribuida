@@ -4,6 +4,7 @@ package main
 
 import (
 	"fmt"
+	"runtime"
 	"sync"
 )
 
@@ -24,6 +25,10 @@ func main() {
 			fmt.Printf("Goroutine %d: Hello, World!\n", i)
 		}(i)
 	}
+
+	runtime.GOMAXPROCS(1)
+
+	fmt.Println(">>>", runtime.NumCPU())
 
 	// Wait for all goroutines to finish
 	wg.Wait()

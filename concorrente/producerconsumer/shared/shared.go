@@ -1,14 +1,14 @@
 package shared
 
 import (
-	"aulas/concorrente/producerconsumer/channel"
-	"aulas/concorrente/producerconsumer/cond"
-	"aulas/concorrente/producerconsumer/eventbuffer"
-	monitor "aulas/concorrente/producerconsumer/monitor/impl"
-	"aulas/concorrente/producerconsumer/mx"
-	"aulas/concorrente/producerconsumer/semaforo"
 	"fmt"
 	"os"
+	"test/concorrente/producerconsumer/channel"
+	"test/concorrente/producerconsumer/cond"
+	"test/concorrente/producerconsumer/eventbuffer"
+	monitor "test/concorrente/producerconsumer/monitor/impl"
+	"test/concorrente/producerconsumer/mx"
+	"test/concorrente/producerconsumer/semaforo"
 )
 
 func NewEventBuffer(t string, capacity, consumed int) eventbuffer.IEventBuffer {

@@ -21,10 +21,9 @@ func main() {
 	for i := 1; i <= 5; i++ {
 		go G(i, &wg)
 	}
-	//wg.Wait()
+	wg.Wait()
 
-	fmt.Scanln()
+	//fmt.Scanln()
 
 	fmt.Printf("*** Goroutines concluidas ***\n")
 }
-

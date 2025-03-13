@@ -1,10 +1,10 @@
 package mx
 
 import (
-	"aulas/concorrente/producerconsumer/event"
-	"aulas/concorrente/producerconsumer/eventbuffer"
 	"runtime"
 	"sync"
+	"test/concorrente/producerconsumer/event"
+	"test/concorrente/producerconsumer/eventbuffer"
 )
 
 type MutexEventBuffer struct {

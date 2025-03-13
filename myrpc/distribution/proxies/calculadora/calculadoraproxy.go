@@ -1,18 +1,21 @@
 package calculadoraproxy
 
 import (
+	"fmt"
 	"test/myrpc/distribution/core"
 	"test/myrpc/distribution/requestor"
 	"test/shared"
 )
 
 type CalculadoraProxy struct {
-	Ior   shared.IOR
-	_Core core.Core
+	Ior shared.IOR
+	C   core.Core
 }
 
 func New(i shared.IOR) CalculadoraProxy {
-	r := CalculadoraProxy{Ior: i}
+	_c := *core.NewCore(i.Host, i.Port)
+	r := CalculadoraProxy{Ior: i, C: _c}
+
 	return r
 }
 
@@ -29,9 +32,11 @@ func (p *CalculadoraProxy) Som(p1, p2 int) int {
 	// Prepare invocation to Requestor
 	inv := shared.Invocation{Ior: p.Ior, Request: req}
 
+	fmt.Println("CalculadoraProxy:: Here")
 	// 3. Invoke Requestor
-	requestor := requestor.Requestor{}
-	r := requestor.Invoke(inv)
+	//requestor := requestor.Requestor{}
+	//r := requestor.Invoke(inv)
+	r := p.C.R.Invoke(inv)
 
 	//4. Return something to the publisher
 	return int(r.Rep.Result[0].(float64))

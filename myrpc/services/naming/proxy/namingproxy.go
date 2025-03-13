@@ -1,21 +1,24 @@
 package namingproxy
 
 import (
+	"test/myrpc/distribution/core"
 	"test/myrpc/distribution/requestor"
 	"test/shared"
 )
 
 type NamingProxy struct {
 	Ior shared.IOR
+	C   core.Core
 }
 
 func New(h string, p int) NamingProxy {
+	_c := *core.NewCore(h, p)
 	i := shared.IOR{Host: h, Port: p}
-	r := NamingProxy{Ior: i}
+	r := NamingProxy{Ior: i, C: _c}
 	return r
 }
 
-func (h *NamingProxy) Bind(_p1 string, _p2 shared.IOR) bool {
+func (p *NamingProxy) Bind(_p1 string, _p2 shared.IOR) bool {
 
 	// 1. Configure input parameters
 	params := make([]interface{}, 2)
@@ -26,17 +29,18 @@ func (h *NamingProxy) Bind(_p1 string, _p2 shared.IOR) bool {
 	req := shared.Request{Op: "Bind", Params: params}
 
 	// Prepare invocation to Requestor
-	inv := shared.Invocation{Ior: h.Ior, Request: req}
+	inv := shared.Invocation{Ior: p.Ior, Request: req}
 
 	// 3. Invoke Requestor
-	requestor := requestor.Requestor{}
-	r := requestor.Invoke(inv)
+	//requestor := requestor.Requestor{}
+	//r := requestor.Invoke(inv)
+	r := p.C.R.Invoke(inv)
 
 	//4. Return something to the publisher
 	return r.Rep.Result[0].(bool)
 }
 
-func (h *NamingProxy) Find(_p1 string) shared.IOR {
+func (p *NamingProxy) Find(_p1 string) shared.IOR {
 
 	// 1. Configure input parameters
 	params := make([]interface{}, 1)
@@ -46,11 +50,13 @@ func (h *NamingProxy) Find(_p1 string) shared.IOR {
 	req := shared.Request{Op: "Find", Params: params}
 
 	// Prepare invocation to Requestor
-	inv := shared.Invocation{Ior: h.Ior, Request: req}
+	inv := shared.Invocation{Ior: p.Ior, Request: req}
 
 	// Invoke Requestor
-	requestor := requestor.Requestor{}
-	_r1 := requestor.Invoke(inv).Rep.Result
+	//requestor := requestor.Requestor{}
+	//_r1 := requestor.Invoke(inv).Rep.Result
+	//_r2 := _r1[0].(map[string]interface{})
+	_r1 := p.C.R.Invoke(inv).Rep.Result
 	_r2 := _r1[0].(map[string]interface{})
 
 	//4. Return something to the publisher
